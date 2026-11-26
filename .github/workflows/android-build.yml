@@ -57,7 +57,7 @@ jobs:
       - name: Accept Android SDK licenses
         run: yes | sdkmanager --licenses || true
 
-      # 5. Cache Gradle
+      # 4. Cache Gradle
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
@@ -67,7 +67,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
 
-      # 4. Build Debug APK (direct gradle run)
+      # 4. Build Debug APK (direct gradle run with debug)
       - name: Build Debug APK
         working-directory: android-app
         env:
@@ -75,7 +75,23 @@ jobs:
           ANDROID_HOME: /home/runner/work/android-sdk
         run: |
           export PATH="/home/runner/work/android-sdk/cmdline-tools/latest/bin:/home/runner/work/android-sdk/platform-tools:$PATH"
+          echo "=== Debug info ==="
+          echo "PWD: $(pwd)"
+          echo "PATH: $PATH"
+          echo "ANDROID_SDK_ROOT: $ANDROID_SDK_ROOT"
+          echo "ANDROID_HOME: $ANDROID_HOME"
+          echo "=== Files ==="
+          ls -la
+          echo "=== gradlew ==="
+          ls -la gradlew
+          echo "=== gradle/wrapper ==="
+          ls -la gradle/wrapper/
+          echo "=== gradle-wrapper.properties ==="
+          cat gradle/wrapper/gradle-wrapper.properties
+          echo "=== Testing gradlew ==="
           chmod +x gradlew
+          ./gradlew --version
+          echo "=== Building ==="
           ./gradlew assembleDebug --no-daemon --stacktrace
 
       # 6. Verify APK
