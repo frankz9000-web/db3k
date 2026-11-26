@@ -57,18 +57,6 @@ jobs:
       - name: Accept Android SDK licenses
         run: yes | sdkmanager --licenses || true
 
-      # 5. Generate Gradle Wrapper (if not present)
-      - name: Generate Gradle Wrapper
-        working-directory: android-app
-        run: |
-          GRADLE_VERSION=8.5
-          wget -q "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" -O /tmp/gradle.zip
-          unzip -q /tmp/gradle.zip -d /tmp
-          export PATH="/tmp/gradle-${GRADLE_VERSION}/bin:$PATH"
-          gradle wrapper --gradle-version ${GRADLE_VERSION} --distribution-type all
-          chmod +x gradlew
-          echo "Gradle wrapper generated"
-
       # 5. Cache Gradle
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -79,7 +67,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
 
-      # 6. Build Debug APK (direct gradle run)
+      # 4. Build Debug APK (direct gradle run)
       - name: Build Debug APK
         working-directory: android-app
         env:
@@ -87,9 +75,10 @@ jobs:
           ANDROID_HOME: /home/runner/work/android-sdk
         run: |
           export PATH="/home/runner/work/android-sdk/cmdline-tools/latest/bin:/home/runner/work/android-sdk/platform-tools:$PATH"
+          chmod +x gradlew
           ./gradlew assembleDebug --no-daemon --stacktrace
 
-      # 7. Verify APK
+      # 6. Verify APK
       - name: Verify APK
         run: |
           ls -la android-app/app/build/outputs/apk/debug/
