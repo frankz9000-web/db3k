@@ -71,18 +71,17 @@ jobs:
 
       # 5. Make gradlew executable
       - name: Make gradlew executable
+        working-directory: android-app
         run: chmod +x gradlew
 
-      # 6. Build Debug APK using gradle action (handles everything)
+      # 6. Build Debug APK
       - name: Build Debug APK
-        uses: gradle/gradle-build-action@v3
-        with:
-          working-directory: android-app
-          arguments: assembleDebug --no-daemon --stacktrace
-          gradle-version: wrapper
+        working-directory: android-app
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
 
       # 7. Verify APK
       - name: Verify APK
+        working-directory: android-app
         run: |
           ls -la app/build/outputs/apk/debug/
           APK_PATH=$(find app/build/outputs/apk/debug -name "*.apk" | head -1)
