@@ -5,20 +5,24 @@ on:
     branches: [main, master]
     paths:
       - 'android-app/**'
-  workflow_dispatch:  # manual trigger from Actions tab
+      - '.github/workflows/android-build.yml'
+  workflow_dispatch:
 
 jobs:
   build:
     name: Build Debug APK
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: android-app
 
     steps:
-      # 1. Checkout code
+      # 1. Checkout
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Setup JDK 17 (required for Android Gradle Plugin 8.4)
+      # 2. Setup JDK 17
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
@@ -26,18 +30,36 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      # 3. Setup Android SDK (using cmdline-tools)
+      # 3. Setup Android SDK manually (more reliable than setup-android action)
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          api-level: 34
-          ndk-version: r26c
-          emulator: false
-          cmdline-tools-version: latest
-      - name: Accept Android SDK licenses
-        run: yes | sdkmanager --licenses || true
+        run: |
+          # Install cmdline-tools
+          sudo apt-get update -qq
+          sudo apt-get install -qq -y unzip wget
+          
+          ANDROID_SDK_ROOT="${{ runner.temp }}/android-sdk"
+          mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
+          
+          # Download latest cmdline-tools
+          wget -q "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip" -O /tmp/cmdline-tools.zip
+          unzip -q /tmp/cmdline-tools.zip -d "$ANDROID_SDK_ROOT/cmdline-tools"
+          mv "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" "$ANDROID_SDK_ROOT/cmdline-tools/latest"
+          
+          # Add to PATH
+          export PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH"
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+          echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          echo "$ANDROID_SDK_ROOT/platform-tools" >> $GITHUB_PATH
+          
+          # Accept licenses and install SDK
+          yes | sdkmanager --licenses > /dev/null
+          sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools" > /dev/null
+          
+          # Verify
+          echo "Android SDK installed at $ANDROID_SDK_ROOT"
+          sdkmanager --list_installed | head -20
 
-      # 4. Cache Gradle dependencies
+      # 4. Cache Gradle
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
@@ -45,26 +67,28 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          restore-keys: ${{ runner.os }}-gradle-
 
       # 5. Make gradlew executable
       - name: Make gradlew executable
-        run: chmod +x android-app/gradlew
+        run: chmod +x gradlew
 
-      # 6. Build Debug APK
+      # 6. Build Debug APK using gradle action (handles everything)
       - name: Build Debug APK
-        working-directory: android-app
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        uses: gradle/gradle-build-action@v3
+        with:
+          working-directory: android-app
+          arguments: assembleDebug --no-daemon --stacktrace
+          gradle-version: wrapper
 
-      # 7. Verify APK exists
+      # 7. Verify APK
       - name: Verify APK
         run: |
-          ls -la android-app/app/build/outputs/apk/debug/
-          APK_PATH=$(find android-app/app/build/outputs/apk/debug -name "*.apk" | head -1)
+          ls -la app/build/outputs/apk/debug/
+          APK_PATH=$(find app/build/outputs/apk/debug -name "*.apk" | head -1)
           echo "APK_PATH=$APK_PATH" >> $GITHUB_ENV
 
-      # 8. Upload APK as artifact
+      # 8. Upload APK
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
@@ -72,7 +96,7 @@ jobs:
           path: android-app/app/build/outputs/apk/debug/*.apk
           retention-days: 30
 
-      # 9. Upload mapping file for crash analysis
+      # 9. Upload mapping
       - name: Upload ProGuard mapping
         uses: actions/upload-artifact@v4
         if: always()
@@ -80,23 +104,3 @@ jobs:
           name: mapping-files
           path: android-app/app/build/outputs/mapping/debug/
           retention-days: 30
-
-  # Optional: Build Release APK (requires signing config)
-  # build-release:
-  #   name: Build Release APK
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-java@v4
-  #       with: { distribution: 'temurin', java-version: '17', cache: 'gradle' }
-  #     - uses: android-actions/setup-android@v3
-  #       with: { api-level: 34 }
-  #     - name: Build Release APK
-  #       working-directory: android-app
-  #       run: ./gradlew assembleRelease --no-daemon
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: db3k-blog-release-apk
-  #         path: android-app/app/build/outputs/apk/release/*.apk
