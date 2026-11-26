@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      ANDROID_SDK_ROOT: ${{ runner.temp }}/android-sdk
+      ANDROID_SDK_ROOT: /home/runner/work/android-sdk
 
     steps:
       # 1. Checkout
@@ -35,7 +35,7 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -qq -y unzip wget
           
-          ANDROID_SDK_ROOT="${{ runner.temp }}/android-sdk"
+          ANDROID_SDK_ROOT="/home/runner/work/android-sdk"
           mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
           
           wget -q "https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip" -O /tmp/cmdline-tools.zip
@@ -56,12 +56,12 @@ jobs:
       - name: Accept Android SDK licenses
         run: yes | sdkmanager --licenses || true
 
-      # 5. Build with Gradle Action (pass Android SDK location)
+      # 5. Build with Gradle Action
       - name: Build Debug APK
         uses: gradle/gradle-build-action@v3
         env:
-          ANDROID_SDK_ROOT: ${{ runner.temp }}/android-sdk
-          ANDROID_HOME: ${{ runner.temp }}/android-sdk
+          ANDROID_SDK_ROOT: /home/runner/work/android-sdk
+          ANDROID_HOME: /home/runner/work/android-sdk
         with:
           working-directory: android-app
           arguments: assembleDebug --no-daemon --stacktrace
@@ -75,7 +75,7 @@ jobs:
           APK_PATH=$(find android-app/app/build/outputs/apk/debug -name "*.apk" | head -1)
           echo "APK_PATH=$APK_PATH" >> $GITHUB_ENV
 
-      # 6. Upload APK
+      # 7. Upload APK
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
@@ -83,7 +83,7 @@ jobs:
           path: android-app/app/build/outputs/apk/debug/*.apk
           retention-days: 30
 
-      # 7. Upload mapping
+      # 8. Upload mapping
       - name: Upload ProGuard mapping
         uses: actions/upload-artifact@v4
         if: always()
