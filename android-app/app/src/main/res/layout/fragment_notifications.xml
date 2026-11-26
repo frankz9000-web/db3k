@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ducati_black">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/notifications_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/spacing_md"
+            android:paddingBottom="@dimen/spacing_xl"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <!-- Actions Bar -->
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/actions_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/ducati_dark_gray"
+            android:padding="@dimen/spacing_md"
+            android:visibility="gone"
+            app:fabAlignmentMode="center"
+            app:fabAnimationMode="slide"
+            app:hideOnScroll="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginHorizontal="@dimen/spacing_md">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/mark_all_read"
+                    style="@style/Widget.DB3K.Button.Tonal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/mark_all_read"
+                    android:icon="@drawable/ic_mark_read"
+                    android:layout_marginEnd="@dimen/spacing_sm" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/clear_all"
+                    style="@style/Widget.DB3K.Button.Secondary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/clear_all"
+                    android:icon="@drawable/ic_delete"
+                    android:layout_marginStart="@dimen/spacing_sm" />
+
+            </LinearLayout>
+
+        </com.google.android.material.bottomappbar.BottomAppBar>
+
+        <!-- Empty State -->
+        <LinearLayout
+            android:id="@+id/empty_state"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="@dimen/spacing_xxl"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="@dimen/icon_xxl"
+                android:layout_height="@dimen/icon_xxl"
+                android:src="@drawable/ic_notification_ducati"
+                android:alpha="0.3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notifications_empty"
+                style="@style/TextAppearance.DB3K.TitleMedium"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="@dimen/spacing_md" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notifications_empty_desc"
+                style="@style/TextAppearance.DB3K.BodySmall"
+                android:textColor="@color/text_tertiary"
+                android:layout_marginTop="@dimen/spacing_xs"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <!-- Progress Bar -->
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.DB3K.ProgressIndicator.Circular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <!-- Unread Badge -->
+        <TextView
+            android:id="@+id/unread_badge"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="@dimen/spacing_md"
+            android:background="@drawable/bg_badge_unread"
+            android:textColor="@color/ducati_white"
+            android:textSize="11sp"
+            android:textWeight="600"
+            android:gravity="center"
+            android:visibility="gone" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

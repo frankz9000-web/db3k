@@ -1,0 +1,86 @@
+<resources>
+    <string name="app_name">DB3K Blog</string>
+    <string name="app_name_short">DB3K</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_posts">Post</string>
+    <string name="nav_events">Eventi</string>
+    <string name="nav_notifications">Notifiche</string>
+    <string name="nav_settings">Impostazioni</string>
+    
+    <!-- Home -->
+    <string name="welcome_title">Benvenuto su DB3K</string>
+    <string name="welcome_subtitle">Il blog dei DRIZ BIKERS 3000</string>
+    <string name="latest_posts">Ultimi post</string>
+    <string name="upcoming_events">Prossimi eventi</string>
+    <string name="view_all">Vedi tutti</string>
+    <string name="no_posts_yet">Nessun post disponibile</string>
+    <string name="no_events_yet">Nessun evento in programma</string>
+    <string name="pull_to_refresh">Tira per aggiornare</string>
+    <string name="refreshing">Aggiornamento…</string>
+    <string name="last_updated">Aggiornato: %s</string>
+    
+    <!-- Post Detail -->
+    <string name="post_author">Autore</string>
+    <string name="post_date">Data</string>
+    <string name="post_category">Categoria</string>
+    <string name="read_more">Leggi tutto</string>
+    <string name="share_post">Condividi</string>
+    <string name="open_in_browser">Apri nel browser</string>
+    <string name="copy_link">Copia link</string>
+    
+    <!-- Notifications -->
+    <string name="notifications_title">Notifiche</string>
+    <string name="notifications_empty">Nessuna notifica</string>
+    <string name="notifications_empty_desc">Le notifiche push appariranno qui</string>
+    <string name="notification_new_post">Nuovo post pubblicato</string>
+    <string name="notification_race_results">Risultati gara</string>
+    <string name="notification_event">Evento in programma</string>
+    <string name="mark_all_read">Segna tutto come letto</string>
+    <string name="clear_all">Svuota tutto</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">Impostazioni</string>
+    <string name="settings_notifications">Notifiche</string>
+    <string name="settings_push_enabled">Attiva notifiche push</string>
+    <string name="settings_push_enabled_desc">Ricevi avvisi per nuovi post, gare ed eventi</string>
+    <string name="settings_new_posts">Nuovi post</string>
+    <string name="settings_race_results">Risultati gare</string>
+    <string name="settings_events">Eventi</string>
+    <string name="settings_sound">Suono notifiche</string>
+    <string name="settings_vibration">Vibrazione</string>
+    <string name="settings_about">Informazioni</string>
+    <string name="settings_version">Versione %s</string>
+    <string name="settings_privacy">Privacy Policy</string>
+    <string name="settings_terms">Termini di servizio</string>
+    <string name="settings_github">Codice sorgente</string>
+    <string name="settings_feedback">Invia feedback</string>
+    
+    <!-- Push notification templates -->
+    <string name="push_template_new_post_title">📢 Nuovo post DB3K!</string>
+    <string name="push_template_new_post_body">È appena uscito un nuovo articolo. Apri per leggerlo!</string>
+    <string name="push_template_race_title">🏁 Risultati gara aggiornati!</string>
+    <string name="push_template_race_body">I risultati della gara sono online. Controlla i dettagli.</string>
+    <string name="push_template_event_title">🎉 Prossima uscita DB3K!</string>
+    <string name="push_template_event_body">Nuova uscita programmata. Vedi dettagli e iscriviti.</string>
+    
+    <!-- Errors & Loading -->
+    <string name="error_network">Errore di rete</string>
+    <string name="error_loading">Errore durante il caricamento</string>
+    <string name="error_unknown">Si è verificato un errore</string>
+    <string name="retry">Riprova</string>
+    <string name="loading">Caricamento…</string>
+    <string name="offline_mode">Modalità offline</string>
+    <string name="offline_desc">Visualizzazione contenuti salvati localmente</string>
+    
+    <!-- Permissions -->
+    <string name="permission_notification_title">Attiva le notifiche</string>
+    <string name="permission_notification_message">Per ricevere aggiornamenti in tempo reale sui post e le gare, abilita le notifiche nelle impostazioni.</string>
+    <string name="permission_go_settings">Vai alle impostazioni</string>
+    <string name="permission_later">Più tardi</string>
+    
+    <!-- Ducati branding -->
+    <string name="ducati_tagline">Ducati Style</string>
+    <string name="powered_by_ducati">Notifiche stile Ducati</string>
+</resources>

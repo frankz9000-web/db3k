@@ -1,0 +1,32 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PostGrid from '../../components/PostGrid.astro';
+import { getCollection } from 'astro:content';
+import path from 'node:path';
+
+const publicDir = path.resolve(process.cwd(), 'public');
+
+// Genera le pagine 2..N (la pagina 1 è l'indice /).
+export async function getStaticPaths({ paginate }: any) {
+  const posts = (await getCollection('posts')).sort(
+    (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+  );
+  return paginate(posts, { pageSize: 6 }).filter(
+    (p: any) => p.props.page.currentPage > 1
+  );
+}
+
+const { page } = Astro.props;
+---
+
+<Layout title={`Articoli — pagina ${page.currentPage}`}>
+  <div class="mx-auto w-full max-w-5xl px-6 pt-10">
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-silver hover:text-ducati"
+    >
+      ← Home
+    </a>
+  </div>
+  <PostGrid page={page} publicDir={publicDir} />
+</Layout>

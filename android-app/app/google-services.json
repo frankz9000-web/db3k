@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "340550725498",
+    "project_id": "db3k-blog",
+    "storage_bucket": "db3k-blog.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340550725498:android:ea7b45913dd2edaae370c3",
+        "android_client_info": {
+          "package_name": "com.db3k.diariodibordo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_IUmXu2GIkb8ShV-zfP-pqMza-CLmDlE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

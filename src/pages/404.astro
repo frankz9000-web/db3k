@@ -1,0 +1,39 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+/* Pagina 404 — importante anche per il SEO:
+   se la build include un 404.html a livello di root, Cloudflare Pages
+   NON applica il "SPA fallback" (che serviva la home con HTTP 200 per
+   ogni URL inesistente). Le URL non valide torneranno 404 reali. */
+---
+
+<Layout
+  title="Pagina non trovata"
+  description="Questa pagina non esiste. Torna alla home del diario di bordo DB3K."
+>
+  <section class="mx-auto flex w-full max-w-4xl flex-col items-center px-4 py-24 text-center sm:px-6">
+    <span class="mb-6 inline-block h-5 w-1.5 skew-x-[-12deg] bg-ducati"></span>
+    <p class="text-[11px] font-bold uppercase tracking-[0.35em] text-silver">Errore 404</p>
+    <h1 class="mt-3 text-5xl font-black italic tracking-tight text-ink sm:text-6xl">
+      Qui non c'è nulla<span class="text-ducati">.</span>
+    </h1>
+    <p class="mt-5 max-w-md text-sm leading-relaxed text-silver">
+      La pagina che stai cercando non esiste o è stata spostata.
+      Torna alla home del diario di bordo e riparti da lì.
+    </p>
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+      <a
+        href="/"
+        class="rounded-full bg-ducati px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition hover:opacity-90"
+      >
+        ← Torna alla home
+      </a>
+      <a
+        href="/tags/"
+        class="rounded-full border border-lunar px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-silver transition hover:border-ducati hover:text-ducati"
+      >
+        Sfoglia i tag
+      </a>
+    </div>
+  </section>
+</Layout>

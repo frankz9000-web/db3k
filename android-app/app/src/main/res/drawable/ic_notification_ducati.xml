@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ducati-style notification icon - Red shield with DB3K -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Shield background -->
+    <path
+        android:fillColor="#E31837"
+        android:pathData="M12,2C7.58,2 4,4.58 4,9c0,4.42 7,13 8,14c1,-1 8,-9.58 8,-14C20,4.58 16.42,2 12,2z" />
+    <!-- DB3K text -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M9.5,10.5h1v4h-1zM11,10.5h1v4h-1zM13,10.5h1v2.5h-1v-1.5h-1v1.5h-1zM15.5,10.5h1v4h-1v-2h1v-2z" />
+    <!-- Red accent line -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M7,17h10v1H7z" />
+</vector>

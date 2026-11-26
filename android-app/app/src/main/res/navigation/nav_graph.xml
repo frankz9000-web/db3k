@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <!-- Home -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.db3k.diariodibordo.ui.home.HomeFragment"
+        android:label="@string/nav_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_postsFragment"
+            app:destination="@id/postsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_eventsFragment"
+            app:destination="@id/eventsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <!-- Posts List -->
+    <fragment
+        android:id="@+id/postsFragment"
+        android:name="com.db3k.diariodibordo.ui.posts.PostsFragment"
+        android:label="@string/nav_posts"
+        tools:layout="@layout/fragment_posts">
+        <action
+            android:id="@+id/action_postsFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+    </fragment>
+
+    <!-- Post Detail -->
+    <fragment
+        android:id="@+id/postDetailFragment"
+        android:name="com.db3k.diariodibordo.ui.posts.PostDetailFragment"
+        android:label="Dettaglio Post"
+        tools:layout="@layout/fragment_post_detail">
+        <argument
+            android:name="slug"
+            app:argType="string" />
+    </fragment>
+
+    <!-- Events -->
+    <fragment
+        android:id="@+id/eventsFragment"
+        android:name="com.db3k.diariodibordo.ui.events.EventsFragment"
+        android:label="@string/nav_events"
+        tools:layout="@layout/fragment_events">
+        <action
+            android:id="@+id/action_eventsFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+    </fragment>
+
+    <!-- Notifications -->
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.db3k.diariodibordo.ui.notifications.NotificationsFragment"
+        android:label="@string/nav_notifications"
+        tools:layout="@layout/fragment_notifications">
+        <action
+            android:id="@+id/action_notificationsFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+    </fragment>
+
+    <!-- Settings -->
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.db3k.diariodibordo.ui.settings.SettingsFragment"
+        android:label="@string/nav_settings"
+        tools:layout="@layout/fragment_settings" />
+
+    <!-- Global actions for deep links -->
+    <action
+        android:id="@+id/action_global_postDetailFragment"
+        app:destination="@id/postDetailFragment" />
+
+</navigation>

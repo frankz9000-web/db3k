@@ -1,0 +1,54 @@
+---
+import type { PostMedia } from '../utils/media';
+
+interface Props {
+  title: string;
+  description?: string;
+  pubDate: Date;
+  href: string;
+  emoji?: string;
+  category?: string;
+  categoryLabel?: string;
+}
+
+const { title, description, pubDate, href, emoji, category, categoryLabel } = Astro.props;
+
+const formatDate = new Intl.DateTimeFormat('it-IT', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<article class="group surface-card overflow-hidden">
+  <div class="p-5">
+    <div class="mb-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        {emoji && <span class="text-xl">{emoji}</span>}
+        {category && (
+          <span class="badge badge-red !px-2 !py-0.5 text-[10px]">{categoryLabel}</span>
+        )}
+      </div>
+      <time datetime={pubDate.toISOString()} class="text-[11px] font-bold uppercase tracking-wider text-silver">
+        {formatDate.format(pubDate)}
+      </time>
+    </div>
+
+    <h2 class="text-lg font-extrabold leading-tight transition group-hover:text-ducati">
+      <a href={href} class="after:absolute after:inset-0">{title}</a>
+    </h2>
+
+    {description && (
+      <p class="mt-2 line-clamp-3 text-sm leading-relaxed text-silver">{description}</p>
+    )}
+
+    <div class="mt-4 flex items-center justify-between border-t border-lunar pt-3.5">
+      <span class="text-[11px] font-medium uppercase tracking-wider text-silver">
+        #{category ?? 'guida'}
+      </span>
+      <span class="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-ducati">
+        Leggi <span aria-hidden="true" class="transition group-hover:translate-x-0.5">→</span>
+      </span>
+    </div>
+  </div>
+</article>

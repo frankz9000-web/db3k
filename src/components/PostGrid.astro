@@ -1,0 +1,82 @@
+---
+import PostCard from './PostCard.astro';
+import { getPostMedia } from '../utils/media';
+
+interface Props {
+  /**
+   * Oggetto pagina:
+   * { data, size, total, currentPage, lastPage, url: {current,next,prev,first,last} }
+   */
+  page: any;
+  /** Directory public/ risolta (per l'anteprima media). */
+  publicDir: string;
+}
+
+const { page, publicDir } = Astro.props;
+const posts = page.data;
+
+// URL della pagina N (1 → '/', 2 → '/page/2/', ...)
+function pageUrl(n: number) {
+  return n === 1 ? '/' : `/page/${n}/`;
+}
+const pages = Array.from({ length: page.lastPage }, (_, i) => i + 1);
+const prevUrl = page.currentPage > 1 ? pageUrl(page.currentPage - 1) : undefined;
+const nextUrl = page.currentPage < page.lastPage ? pageUrl(page.currentPage + 1) : undefined;
+---
+
+<div class="mx-auto w-full max-w-5xl px-6 py-14" id="diario">
+  <div class="mb-8 flex items-end justify-between gap-4">
+    <h2 class="text-3xl font-black tracking-tight sm:text-4xl">
+      Registro di bordo<span class="text-ducati">.</span>
+    </h2>
+    <span class="badge badge-red mb-1">
+      {page.total} ARTICOLI{page.lastPage > 1 ? ` · PAG. ${page.currentPage}/${page.lastPage}` : ''}
+    </span>
+  </div>
+
+  <ul class="grid gap-4 sm:grid-cols-2">
+    {posts.map((post) => (
+      <li>
+        <PostCard
+          title={post.data.title}
+          description={post.data.description}
+          pubDate={post.data.pubDate}
+          href={`/posts/${post.id}/`}
+          media={getPostMedia(post.id, publicDir, post.data.mediaDir)}
+          tags={post.data.tags}
+        />
+      </li>
+    ))}
+  </ul>
+
+  {
+    page.lastPage > 1 && (
+      <nav class="mt-10 flex flex-wrap items-center justify-center gap-2" aria-label="Paginazione articoli">
+        {
+          prevUrl && (
+            <a href={prevUrl} class="btn btn-secondary !px-3 !py-2 text-xs">← Prec</a>
+          )
+        }
+
+        {pages.map((n) => (
+          <a
+            href={pageUrl(n)}
+            aria-current={n === page.currentPage ? 'page' : undefined}
+            class:list={[
+              'flex h-9 min-w-9 items-center justify-center rounded-sm px-2 text-sm font-bold transition',
+              n === page.currentPage ? 'bg-ducati text-white' : 'text-silver hover:text-ducati',
+            ]}
+          >
+            {n}
+          </a>
+        ))}
+
+        {
+          nextUrl && (
+            <a href={nextUrl} class="btn btn-secondary !px-3 !py-2 text-xs">Succ →</a>
+          )
+        }
+      </nav>
+    )
+  }
+</div>

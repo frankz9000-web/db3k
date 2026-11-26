@@ -1,0 +1,263 @@
+---
+interface Props {
+  imageSrc?: string;
+  imageAlt?: string;
+}
+
+const {
+  imageSrc = '/fb/hero-cover.jpg',
+  imageAlt = "DB3K — ASD DRIZ Bikers 3000, Catania",
+} = Astro.props;
+---
+
+<section class="hero-ducati">
+  <!-- Immagine di sfondo + overlay sfumato -->
+  <div class="hero-media hero-anim">
+    <img src={imageSrc} alt={imageAlt} width="2560" height="1374" fetchpriority="high" />
+    <div class="hero-overlay"></div>
+    <div class="hero-red-accent"></div>
+  </div>
+
+  <!-- Contenuto principale -->
+  <div class="hero-container">
+    <div class="hero-badges">
+      <span class="badge badge-red">D.R.I.Z // ASD BIKERS 3000</span>
+      <span class="badge">CATANIA · SICILIA</span>
+      <span class="badge">MTB / URBAN CROSS</span>
+    </div>
+
+    <h1 class="hero-title">
+      DB<span class="accent">3K</span>
+    </h1>
+
+    <p class="hero-manifesto">
+      Nata a Catania da amici che pedalano insieme
+      con un solo principio scritto in rosso:
+      <em>pedalare forte, correre pulito.</em>
+    </p>
+
+    <div class="hero-actions">
+      <a href="#diario" class="btn btn-primary">Ultimi articoli ↓</a>
+      <a
+        href="https://www.facebook.com/drizbikers3000"
+        target="_blank"
+        rel="noreferrer"
+        class="btn btn-secondary"
+      >
+        Pagina Facebook <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+
+    <!-- Barra Crew di Fondazione -->
+    <div class="hero-crew">
+      <span class="crew-label">CREW DI FONDAZIONE</span>
+      <div class="crew-list">
+        <span>FRANK</span>
+        <span>SARO</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-ducati {
+    position: relative;
+    min-height: 82vh;
+    display: flex;
+    align-items: flex-end;
+    background-color: var(--bg-asphalt, #0A0A0B);
+    color: var(--text-white, #F8F8F8);
+    overflow: hidden;
+    border-bottom: 3px solid var(--ducati-red, #CC0000);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  .hero-media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    filter: contrast(1.08) saturate(0.95);
+  }
+
+  /* Gradiente asfalto per garantire leggibilità del testo */
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 10, 11, 0.45) 0%,
+      rgba(10, 10, 11, 0.78) 55%,
+      rgba(10, 10, 11, 0.98) 100%
+    );
+  }
+
+  /* Bagliore diagonale Ducati Red */
+  .hero-red-accent {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at 85% 20%,
+      rgba(204, 0, 0, 0.28) 0%,
+      transparent 55%
+    );
+    pointer-events: none;
+  }
+
+  .hero-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 4.5rem 1.5rem 2.75rem;
+  }
+
+  /* Badge stile telemetria */
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.32rem 0.65rem;
+    background: rgba(20, 20, 22, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: var(--text-silver, #A1A1AA);
+    border-radius: 2px;
+  }
+
+  .badge-red {
+    background: var(--ducati-red, #CC0000);
+    border-color: var(--ducati-red, #CC0000);
+    color: #FFFFFF;
+  }
+
+  /* Titolo Hero */
+  .hero-title {
+    font-size: clamp(3.6rem, 9vw, 6.5rem);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    font-style: italic;
+    margin: 0 0 1.25rem;
+    text-transform: uppercase;
+  }
+
+  .hero-title .accent {
+    color: var(--ducati-red, #CC0000);
+    text-shadow: 0 0 28px rgba(204, 0, 0, 0.45);
+  }
+
+  /* Manifesto */
+  .hero-manifesto {
+    max-width: 62ch;
+    font-size: clamp(1.05rem, 1.8vw, 1.22rem);
+    line-height: 1.6;
+    color: #E4E4E7;
+    margin: 0 0 2rem;
+  }
+
+  .hero-manifesto strong {
+    color: #FFFFFF;
+    font-weight: 700;
+  }
+
+  .hero-manifesto em {
+    color: #FF3B3B;
+    font-style: italic;
+    font-weight: 600;
+  }
+
+  /* Pulsanti CTA */
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-bottom: 2.75rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.8rem 1.4rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .btn-primary {
+    background-color: var(--ducati-red, #CC0000);
+    color: #FFFFFF;
+    border: 1px solid var(--ducati-red, #CC0000);
+    box-shadow: 0 6px 20px rgba(204, 0, 0, 0.35);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--ducati-red-dark, #990000);
+    border-color: var(--ducati-red-dark, #990000);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background-color: rgba(20, 20, 22, 0.75);
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(6px);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--ducati-red, #CC0000);
+    background-color: rgba(204, 0, 0, 0.12);
+  }
+
+  /* Barra Crew */
+  .hero-crew {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .crew-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    color: var(--ducati-red, #CC0000);
+  }
+
+  .crew-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-silver, #A1A1AA);
+  }
+
+  .crew-list span:not(:last-child)::after {
+    content: "·";
+    margin-left: 1.25rem;
+    color: var(--ducati-red, #CC0000);
+  }
+</style>

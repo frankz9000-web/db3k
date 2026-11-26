@@ -1,0 +1,121 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const pillole = await getCollection('pillole');
+  return pillole.map((p) => ({
+    params: { slug: p.id },
+    props: { pilloa: p },
+  }));
+}
+
+interface Props {
+  pilloa: any;
+}
+
+const { pilloa } = Astro.props;
+const { Content } = await render(pilloa);
+
+const allPillole = (await getCollection('pillole'))
+  .filter((p) => p.id !== pilloa.id)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 4);
+
+// Navigazione tra pillole
+const all = await getCollection('pillole');
+const sorted = all.sort((a, b) => a.data.pubDate.getTime() - b.data.pubDate.getTime());
+const idx = sorted.findIndex((p) => p.id === pilloa.id);
+const prevPilloa = idx > 0 ? sorted[idx - 1] : null;
+const nextPilloa = idx < sorted.length - 1 ? sorted[idx + 1] : null;
+
+const categoryLabels: Record<string, string> = {
+  allenamento: '💪 Allenamento',
+  nutrizione: '🍎 Nutrizione',
+  attrezzatura: '🎒 Attrezzatura',
+  sicurezza: '🔒 Sicurezza',
+  tecnica: '🎯 Tecnica',
+};
+---
+
+<Layout
+  title={pilloa.data.title}
+  description={pilloa.data.description}
+>
+  <article class="mx-auto max-w-3xl px-6 py-14">
+    <!-- Intestazione -->
+    <header class="mb-10">
+      <a href="/pillole/" class="text-sm font-bold uppercase tracking-wider text-ducati hover:underline">
+        ← Torna alle Pillole
+      </a>
+      <div class="mt-4 flex flex-wrap items-center gap-3">
+        {pilloa.data.category && (
+          <span class="badge badge-red">{categoryLabels[pilloa.data.category] ?? pilloa.data.category}</span>
+        )}
+        {pilloa.data.emoji && (
+          <span class="text-3xl">{pilloa.data.emoji}</span>
+        )}
+        <time
+          datetime={pilloa.data.pubDate.toISOString()}
+          class="text-[11px] font-bold uppercase tracking-wider text-silver"
+        >
+          {new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }).format(pilloa.data.pubDate)}
+        </time>
+      </div>
+      <h1 class="mt-4 text-3xl font-black leading-tight tracking-tight sm:text-4xl">
+        {pilloa.data.title}
+      </h1>
+      {pilloa.data.description && (
+        <p class="mt-3 text-lg text-silver">{pilloa.data.description}</p>
+      )}
+    </header>
+
+    <!-- Contenuto -->
+    <div class="prose-blog">
+      <Content />
+    </div>
+
+    <!-- Navigazione tra pillole -->
+    <nav class="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-lunar pt-8 text-sm font-bold uppercase tracking-wider text-silver">
+      {prevPilloa ? (
+        <a href={`/pillole/${prevPilloa.id}/`} class="flex items-center gap-2 hover:text-ducati">
+          <span>←</span> {prevPilloa.data.title}
+        </a>
+      ) : <span></span>}
+      {nextPilloa ? (
+        <a href={`/pillole/${nextPilloa.id}/`} class="flex items-center gap-2 hover:text-ducati">
+          {nextPilloa.data.title} <span>→</span>
+        </a>
+      ) : <span></span>}
+    </nav>
+
+    <!-- Altre pillole -->
+    {allPillole.length > 0 && (
+      <section class="mt-14">
+        <h2 class="mb-6 text-xl font-black tracking-tight">Altre Pillole</h2>
+        <div class="grid gap-4 sm:grid-cols-2">
+          {allPillole.map((p) => (
+            <a
+              href={`/pillole/${p.id}/`}
+              class="surface-card block p-5 transition hover:border-ducati"
+            >
+              <div class="mb-2 flex items-center gap-2">
+                {p.data.emoji && <span>{p.data.emoji}</span>}
+                {p.data.category && (
+                  <span class="badge !px-2 !py-0.5 !text-[10px]">{categoryLabels[p.data.category] ?? p.data.category}</span>
+                )}
+              </div>
+              <h3 class="text-sm font-extrabold leading-tight">{p.data.title}</h3>
+              <time
+                datetime={p.data.pubDate.toISOString()}
+                class="mt-1 block text-[10px] font-bold uppercase tracking-wider text-silver"
+              >
+                {new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'short', year: 'numeric' }).format(p.data.pubDate)}
+              </time>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+</Layout>

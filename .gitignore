@@ -1,0 +1,107 @@
+# Dipendenze
+node_modules/
+
+# Build Astro
+dist/
+.astro/
+
+# Backup delle revisioni (le snapshot sono solo copie dei post)
+backup/revisions/*
+!backup/revisions/.gitkeep
+
+# Vari
+.DS_Store
+Thumbs.db
+*.log
+.pi-glla/
+
+# Credenziali Facebook (token)
+.env
+
+# Dev build/tmp
+.wrangler/
+__pycache__/
+*.pyc
+
+# Backup vecchi
+backup/
+blog-online-static/
+
+# Scripts Python vecchi
+*.py
+!scripts/fetch_facebook_post_media.py
+
+# Scripts JS vecchi
+import-fb.js
+find_fb_post.mjs
+
+# HTML temporanei
+*.html
+!public/robots.txt
+!public/_redirects
+
+# Research
+research/
+shots/
+
+# Cookies
+fb_cookies*
+
+# Report JSON
+fb_*_report.txt
+fb_*_urls.json
+fb_media_report.txt
+fb_final.json
+fb_graph_posts.json
+fb_graph_report*.txt
+fb_*_app.json
+fb_*_imgs.json
+fb_imgs*.json
+fb_links.json
+fb_meta.json
+fb_post*.json
+fbpost.info.json
+nf-tmp.json
+feed*.json
+post_*.json
+
+# Dump Facebook
+*.dump
+
+# FB temp dirs
+fb_photos/
+fbcx/
+
+# Test
+test_*.jpg
+test_*.py
+vram_probe.ps1
+
+# Start scripts
+start-dev.bat
+
+# Logs
+astro-dev.log
+
+# Self-test
+.pi-selftest.mjs
+
+# Parity temp
+.tmpparity/
+
+# Assets ignore
+public/.assetsignore
+
+# NB: functions/ NON ignorato — serve nel repo per la build Cloudflare Pages
+
+# Config non essenziali
+wrangler.jsonc
+tsconfig.json
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Secrets — non commitare mai
+.env
+.env.*

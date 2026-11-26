@@ -1,0 +1,35 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PilloleHero from '../../components/PilloleHero.astro';
+import PilloleGrid from '../../components/PilloleGrid.astro';
+import { getCollection } from 'astro:content';
+import path from 'node:path';
+
+const publicDir = path.resolve(process.cwd(), 'public');
+
+const pillole = (await getCollection('pillole')).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+
+const pageSize = 6;
+const lastPage = Math.max(1, Math.ceil(pillole.length / pageSize));
+const page = {
+  data: pillole.slice(0, pageSize),
+  size: pageSize,
+  total: pillole.length,
+  currentPage: 1,
+  lastPage,
+  url: {
+    current: '/pillole/',
+    next: lastPage > 1 ? '/pillole/page/2/' : undefined,
+    prev: undefined,
+    first: undefined,
+    last: lastPage > 1 ? `/pillole/page/${lastPage}/` : undefined,
+  },
+};
+---
+
+<Layout title="Pillole Ciclistiche">
+  <PilloleHero />
+  <PilloleGrid page={page} publicDir={publicDir} />
+</Layout>

@@ -1,0 +1,20 @@
+---
+export interface Props {
+  slotId: string;
+  format?: 'auto' | 'rectangle' | 'horizontal' | 'vertical';
+  class?: string;
+}
+const { slotId, format = 'auto', class: className = '' } = Astro.props;
+const clientId = 'ca-pub-9168473480517499';
+---
+<div class={`my-6 flex justify-center ${className}`}>
+  <ins class="adsbygoogle"
+    style="display:block"
+    data-ad-client={clientId}
+    data-ad-slot={slotId}
+    data-ad-format={format}
+    data-full-width-responsive="true"></ins>
+</div>
+<script is:inline>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+</script>

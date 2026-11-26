@@ -1,0 +1,105 @@
+---
+import type { PostMedia } from '../utils/media';
+
+interface Props {
+  title: string;
+  description?: string;
+  pubDate: Date;
+  href: string;
+  /** Media reali del post (video o foto) per l'anteprima animata. */
+  media?: PostMedia;
+  tags?: string[];
+}
+
+const { title, description, pubDate, href, media, tags = [] } = Astro.props;
+
+const formatDate = new Intl.DateTimeFormat('it-IT', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+
+const nFotos = media?.photos.length ?? 0;
+---
+
+<article class="group surface-card overflow-hidden">
+  {media?.video ? (
+    <div class="preview-anim aspect-[16/10] bg-surface-elev">
+      <video
+        src={media.video}
+        poster={media.poster}
+        muted
+        loop
+        autoplay
+        playsinline
+        preload="metadata"
+        class="h-full w-full object-cover"
+      ></video>
+      <span class="badge-live">
+        <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-ducati"></span>
+        Video
+      </span>
+    </div>
+  ) : media?.animatedSvg ? (
+    <div class="preview-anim aspect-[16/10] bg-surface-elev overflow-hidden">
+      <object data={media.animatedSvg} type="image/svg+xml" class="h-full w-full"></object>
+      <span class="badge-live">
+        <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-ducati"></span>
+        Animazione
+      </span>
+    </div>
+  ) : nFotos >= 2 ? (
+    <div class={`preview-anim media-slideshow sl-${Math.min(nFotos, 3)} aspect-[16/10] bg-surface-elev`}>
+      {media.photos.map((src) => (
+        <img src={src} alt={title} loading="lazy" />
+      ))}
+      <span class="badge-live">
+        <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-ducati"></span>
+        {nFotos} foto
+      </span>
+    </div>
+  ) : nFotos === 1 ? (
+    <div class="preview-anim aspect-[16/10] bg-surface-elev">
+      <img src={media.photos[0]} alt={title} loading="lazy" class="kb-img" />
+      <span class="badge-live">
+        <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-ducati"></span>
+        1 foto
+      </span>
+    </div>
+  ) : (
+    <div class="cover-ph aspect-[16/10]">
+      <span class="wm text-5xl">DB<b>3K</b></span>
+    </div>
+  )}
+
+  <div class="p-5">
+    <div class="mb-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-1.5">
+        {tags[0] && (
+          <span class="badge badge-red !px-2 !py-0.5">{tags[0]}</span>
+        )}
+        {tags[1] && <span class="badge !px-2 !py-0.5">{tags[1]}</span>}
+      </div>
+      <time datetime={pubDate.toISOString()} class="text-[11px] font-bold uppercase tracking-wider text-silver">
+        {formatDate.format(pubDate)}
+      </time>
+    </div>
+
+    <h2 class="text-lg font-extrabold leading-tight transition group-hover:text-ducati">
+      <a href={href} class="after:absolute after:inset-0">{title}</a>
+    </h2>
+
+    {description && (
+      <p class="mt-2 line-clamp-3 text-sm leading-relaxed text-silver">{description}</p>
+    )}
+
+    <div class="mt-4 flex items-center justify-between border-t border-lunar pt-3.5">
+      <span class="text-[11px] font-medium uppercase tracking-wider text-silver">
+        {tags.slice(0, 2).map((t) => `#${t}`).join(' ')}
+      </span>
+      <span class="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-ducati">
+        Leggi <span aria-hidden="true" class="transition group-hover:translate-x-0.5">→</span>
+      </span>
+    </div>
+  </div>
+</article>

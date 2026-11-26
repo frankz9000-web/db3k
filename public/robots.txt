@@ -1,0 +1,6 @@
+# DB3K — Diario di bordo (ASD «DRIZ Bikers 3000»)
+# Nessun blocco: il diario è tutto indicizzabile.
+User-agent: *
+Allow: /
+
+Sitemap: https://db3k-blog.pages.dev/sitemap.xml

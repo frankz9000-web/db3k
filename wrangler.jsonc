@@ -1,0 +1,15 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"compatibility_date": "2026-11-03",
+	"compatibility_flags": ["global_fetch_strictly_public"],
+	"name": "blog-db3k",
+	"pages_build_output_dir": "dist",
+	"kv_namespaces": [
+		{ "binding": "VISITS", "id": "8c05a06fd136427d9c8a1846c4bb440f" },
+		{ "binding": "PUSH_TOKENS", "id": "3e3626f5a9ab49a3aee77d6647505ab1" }
+	],
+
+	"observability": {
+		"enabled": true
+	}
+}

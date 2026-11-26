@@ -1,0 +1,334 @@
+<resources>
+    <!-- Base Application Theme - Dark Ducati Style -->
+    <style name="Theme.DB3K" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Primary Brand Colors -->
+        <item name="colorPrimary">@color/ducati_red</item>
+        <item name="colorPrimaryVariant">@color/ducati_red_dark</item>
+        <item name="colorPrimaryContainer">@color/ducati_medium_gray</item>
+        <item name="colorOnPrimary">@color/ducati_white</item>
+        <item name="colorOnPrimaryContainer">@color/ducati_white</item>
+
+        <!-- Secondary Brand Colors -->
+        <item name="colorSecondary">@color/ducati_silver</item>
+        <item name="colorSecondaryVariant">@color/ducati_light_gray</item>
+        <item name="colorSecondaryContainer">@color/ducati_medium_gray</item>
+        <item name="colorOnSecondary">@color/ducati_black</item>
+        <item name="colorOnSecondaryContainer">@color/ducati_white</item>
+
+        <!-- Tertiary Colors -->
+        <item name="colorTertiary">@color/ducati_red_light</item>
+        <item name="colorTertiaryContainer">@color/ducati_dark_gray</item>
+        <item name="colorOnTertiary">@color/ducati_white</item>
+        <item name="colorOnTertiaryContainer">@color/ducati_white</item>
+
+        <!-- Surface & Background -->
+        <item name="android:colorBackground">@color/ducati_black</item>
+        <item name="colorSurface">@color/ducati_dark_gray</item>
+        <item name="colorSurfaceVariant">@color/ducati_medium_gray</item>
+        <item name="colorOnSurface">@color/ducati_white</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+
+        <!-- Error -->
+        <item name="colorError">@color/ducati_red_light</item>
+        <item name="colorErrorContainer">@color/ducati_red_dark</item>
+        <item name="colorOnError">@color/ducati_white</item>
+        <item name="colorOnErrorContainer">@color/ducati_white</item>
+
+        <!-- Outline -->
+        <item name="colorOutline">@color/border_color</item>
+        <item name="colorOutlineVariant">@color/divider_color</item>
+
+        <!-- Scrim -->
+        <item name="colorScrim">@color/ducati_black</item>
+
+        <!-- Status Bar & Navigation Bar -->
+        <item name="android:statusBarColor">@color/ducati_black</item>
+        <item name="android:navigationBarColor">@color/ducati_black</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+
+        <!-- Window -->
+        <item name="android:windowBackground">@color/ducati_black</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+
+        <!-- Typography -->
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.DB3K.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.DB3K.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.DB3K.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.DB3K.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.DB3K.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.DB3K.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.DB3K.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.DB3K.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.DB3K.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.DB3K.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.DB3K.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.DB3K.LabelSmall</item>
+
+        <!-- Shape Appearance -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.DB3K.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.DB3K.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.DB3K.LargeComponent</item>
+    </style>
+
+    <!-- No Action Bar Variant -->
+    <style name="Theme.DB3K.NoActionBar" parent="Theme.DB3K">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- Splash Screen Theme -->
+    <style name="Theme.DB3K.Splash" parent="Theme.DB3K">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <!-- Dialog Theme -->
+    <style name="Theme.DB3K.Dialog" parent="Theme.Material3.Dark.Dialog">
+        <item name="colorPrimary">@color/ducati_red</item>
+        <item name="colorSurface">@color/ducati_dark_gray</item>
+        <item name="android:windowBackground">@color/ducati_dark_gray</item>
+    </style>
+
+    <!-- Bottom Sheet Theme -->
+    <style name="Theme.DB3K.BottomSheet" parent="Theme.Material3.Dark.BottomSheetDialog">
+        <item name="colorPrimary">@color/ducati_red</item>
+        <item name="colorSurface">@color/ducati_dark_gray</item>
+        <item name="bottomSheetStyle">@style/Widget.DB3K.BottomSheet.Modal</item>
+    </style>
+
+    <!-- Text Appearances -->
+    <style name="TextAppearance.DB3K.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textWeight">700</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.DB3K.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textWeight">700</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.DB3K.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textWeight">600</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.DB3K.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textWeight">600</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.DB3K.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textWeight">600</item>
+        <item name="android:letterSpacing">0.015</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.DB3K.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textWeight">600</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.DB3K.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textWeight">400</item>
+        <item name="android:letterSpacing">0.015</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.DB3K.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textWeight">400</item>
+        <item name="android:letterSpacing">0.025</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.DB3K.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textWeight">400</item>
+        <item name="android:letterSpacing">0.04</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="TextAppearance.DB3K.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textWeight">500</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.DB3K.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textWeight">500</item>
+        <item name="android:letterSpacing">0.05</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="TextAppearance.DB3K.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textWeight">500</item>
+        <item name="android:letterSpacing">0.05</item>
+        <item name="android:textColor">@color/text_tertiary</item>
+    </style>
+
+    <!-- Shape Appearances -->
+    <style name="ShapeAppearance.DB3K.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="ShapeAppearance.DB3K.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="ShapeAppearance.DB3K.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <!-- Custom Widget Styles -->
+    <style name="Widget.DB3K.Button.Primary" parent="Widget.Material3.Button.ElevatedButton">
+        <item name="backgroundTint">@color/ducati_red</item>
+        <item name="android:textColor">@color/ducati_white</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="iconPadding">8dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textWeight">600</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="rippleColor">@color/ripple_color</item>
+    </style>
+
+    <style name="Widget.DB3K.Button.Secondary" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/ducati_red</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="android:textColor">@color/ducati_red</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="iconPadding">8dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textWeight">600</item>
+    </style>
+
+    <style name="Widget.DB3K.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="backgroundTint">@color/ducati_medium_gray</item>
+        <item name="android:textColor">@color/ducati_white</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="iconPadding">8dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textWeight">500</item>
+    </style>
+
+    <style name="Widget.DB3K.CardView" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/ducati_dark_gray</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="strokeColor">@color/border_color</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="Widget.DB3K.Chip.Filter" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/ducati_medium_gray</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="checkedChipBackgroundColor">@color/ducati_red</item>
+        <item name="checkedTextColor">@color/ducati_white</item>
+        <item name="chipStrokeColor">@color/border_color</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipCornerRadius">20dp</item>
+    </style>
+
+    <style name="Widget.DB3K.BottomSheet.Modal" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.DB3K.BottomSheet</item>
+        <item name="android:background">@color/ducati_dark_gray</item>
+    </style>
+
+    <style name="ShapeAppearance.DB3K.BottomSheet" parent="ShapeAppearance.Material3.BottomSheet">
+        <item name="cornerFamilyTopLeft">rounded</item>
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerSizeTopLeft">24dp</item>
+        <item name="cornerSizeTopRight">24dp</item>
+    </style>
+
+    <!-- Toolbar -->
+    <style name="Widget.DB3K.Toolbar" parent="Widget.Material3.Toolbar.Primary">
+        <item name="titleTextAppearance">@style/TextAppearance.DB3K.TitleLarge</item>
+        <item name="subtitleTextAppearance">@style/TextAppearance.DB3K.BodySmall</item>
+        <item name="android:background">@color/ducati_black</item>
+        <item name="navigationIconTint">@color/ducati_white</item>
+        <item name="menuIconTint">@color/ducati_white</item>
+    </style>
+
+    <!-- Progress Indicators -->
+    <style name="Widget.DB3K.ProgressIndicator.Circular" parent="Widget.Material3.CircularProgressIndicator">
+        <item name="indicatorColor">@color/ducati_red</item>
+        <item name="trackColor">@color/ducati_medium_gray</item>
+    </style>
+
+    <style name="Widget.DB3K.ProgressIndicator.Linear" parent="Widget.Material3.LinearProgressIndicator">
+        <item name="indicatorColor">@color/ducati_red</item>
+        <item name="trackColor">@color/ducati_medium_gray</item>
+    </style>
+
+    <!-- Switch -->
+    <style name="Widget.DB3K.CompoundButton.Switch" parent="Widget.Material3.CompoundButton.Switch">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.DB3K.Switch</item>
+        <item name="thumbTint">@color/ducati_red</item>
+        <item name="trackTint">@color/ducati_medium_gray</item>
+    </style>
+
+    <style name="ThemeOverlay.DB3K.Switch" parent="">
+        <item name="colorControlActivated">@color/ducati_red</item>
+        <item name="colorSwitchThumbNormal">@color/ducati_silver</item>
+        <item name="colorSwitchTrackNormal">@color/ducati_light_gray</item>
+    </style>
+
+    <!-- CheckBox -->
+    <style name="Widget.DB3K.CompoundButton.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.DB3K.CheckBox</item>
+    </style>
+
+    <style name="ThemeOverlay.DB3K.CheckBox" parent="">
+        <item name="colorControlActivated">@color/ducati_red</item>
+    </style>
+
+    <!-- RadioButton -->
+    <style name="Widget.DB3K.CompoundButton.RadioButton" parent="Widget.Material3.CompoundButton.RadioButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.DB3K.RadioButton</item>
+    </style>
+
+    <style name="ThemeOverlay.DB3K.RadioButton" parent="">
+        <item name="colorControlActivated">@color/ducati_red</item>
+    </style>
+
+    <!-- TextInputLayout -->
+    <style name="Widget.DB3K.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/ducati_dark_gray</item>
+        <item name="boxStrokeColor">@color/border_color</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="hintTextColor">@color/text_tertiary</item>
+        <item name="android:textColorHint">@color/text_tertiary</item>
+        <item name="counterTextColor">@color/text_tertiary</item>
+    </style>
+
+</resources>

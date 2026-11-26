@@ -1,0 +1,38 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const email = 'Asd.db3k@gmail.com';
+---
+
+<Layout title="Contatti">
+  <section class="mx-auto max-w-5xl px-6 py-14 text-center">
+    <h1 class="hero-title mb-8">Contatti</h1>
+    <p class="text-lg text-silver">Per qualsiasi domanda, proposta o informazione scriveteci a:</p>
+    <div class="mt-6 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+      <a
+        href={`mailto:${email}`}
+        class="inline-flex items-center gap-2 rounded-sm bg-ducati px-8 py-4 text-lg font-bold uppercase tracking-wider text-white transition hover:bg-ducati-dark"
+      >
+        ✉️ {email}
+      </a>
+      <a
+        href="https://m.me/drizbikers3000"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 rounded-sm bg-blue-600 px-8 py-4 text-lg font-bold uppercase tracking-wider text-white transition hover:bg-blue-700"
+      >
+        💬 Scrivici su Facebook
+      </a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-style: italic;
+    text-transform: uppercase;
+  }
+</style>

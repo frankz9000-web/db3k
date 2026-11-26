@@ -1,0 +1,58 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const collection = await getCollection('posts');
+  const posts = Array.isArray(collection) ? collection : [...collection];
+  const tags = new Set();
+  for (const entry of posts) {
+    for (const tag of entry.data.tags ?? []) tags.add(tag);
+  }
+  return [...tags].map((tag) => ({ params: { tag }, props: { tag } }));
+}
+
+const { tag } = Astro.props;
+
+/* Filtra i post per il tag corrente */
+const collection = await getCollection('posts');
+const posts = Array.isArray(collection) ? collection : [...collection];
+const filteredPosts = posts.filter(p => (p.data.tags ?? []).includes(tag))
+  .sort((a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf());
+
+function dateLabel(d: Date): string {
+  return new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
+}
+---
+
+<Layout
+  title={`DB3K — #${tag}`}
+  description={`Post DB3K taggati con ${tag}: il diario di bordo filtrato per facet reale.`}
+>
+  <section class="mx-auto w-full max-w-2xl px-4 sm:px-6 lg:mx-auto py-16">
+    <header class="mb-8 flex items-end justify-between gap-4">
+      <h1 class="skew-x-[-3deg] text-3xl font-black tracking-tight text-ink sm:text-4xl"># {tag}</h1>
+      <span class="shrink-0 rounded-full border border-lunar bg-surface-elev px-3.5 py-1.5 text-[11px] font-bold tabular-nums tracking-widest text-silver">{filteredPosts.length} post</span>
+    </header>
+
+    {filteredPosts.length === 0 ? (
+      <p class="text-silver">Nessun articolo con questo tag.</p>
+    ) : (
+      <div class="grid gap-2">
+        {filteredPosts.map((post) => (
+          <a href={`/posts/${post.id}`} class="group flex items-center justify-between rounded-full border border-lunar bg-surface-elev px-4 py-3 transition hover:border-ducati/60">
+            <span class="text-sm font-semibold tracking-wide text-ink transition group-hover:text-ducati">{post.data.title}</span>
+            <time datetime={new Date(post.data.pubDate).toISOString()} class="shrink-0 text-[11px] tabular-nums text-silver">
+              {dateLabel(new Date(post.data.pubDate))}
+            </time>
+          </a>
+        ))}
+      </div>
+    )}
+
+    <nav class="mt-16 flex items-center justify-between border-t border-lunar pt-6 text-sm text-silver">
+      <a href="/" class="font-semibold tracking-wide text-ink transition hover:text-ducati">← Tutti gli articoli</a>
+      <span class="text-[11px] font-bold tracking-widest">DB<span class="text-ducati">3K</span></span>
+    </nav>
+  </section>
+</Layout>

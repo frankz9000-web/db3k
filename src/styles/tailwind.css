@@ -1,0 +1,326 @@
+@import "tailwindcss";
+
+/* ============================================================
+   DB3K · Tema Ducati Corse (base asfalto + rosso #CC0000)
+   Stesso set di variabili dell'anteprima di riferimento.
+   ============================================================ */
+
+:root {
+  --bg-asphalt: #0A0A0B;
+  --surface: #141416;
+  --surface-elevated: #1C1C20;
+  --text-white: #F8F8F8;
+  --text-silver: #A1A1AA;
+  --ducati-red: #CC0000;
+  --ducati-red-dark: #990000;
+  --line: rgba(255, 255, 255, 0.14);
+  --line-strong: rgba(255, 255, 255, 0.25);
+}
+
+/* Token per le utility Tailwind: bg-asphalt, text-silver,
+   border-lunar, text-ducati, bg-surface, ... */
+@theme inline {
+  --color-asphalt: var(--bg-asphalt);
+  --color-surface: var(--surface);
+  --color-surface-elev: var(--surface-elevated);
+  --color-ink: var(--text-white);
+  --color-silver: var(--text-silver);
+  --color-ducati: var(--ducati-red);
+  --color-ducati-dark: var(--ducati-red-dark);
+  --color-lunar: var(--line);
+  --color-lunar-strong: var(--line-strong);
+}
+
+body {
+  background-color: var(--bg-asphalt);
+  color: var(--text-white);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Anteprima animata (Ken Burns + scanline) ---------- */
+
+@keyframes kb-zoom {
+  from { transform: scale(1.06) translateY(0); }
+  to   { transform: scale(1.18) translateY(-2.5%); }
+}
+
+@keyframes kb-scan {
+  0%   { transform: translateY(-130%); }
+  65%  { transform: translateY(320%); }
+  100% { transform: translateY(320%); }
+}
+
+@keyframes stripes-move {
+  from { background-position: 0 0; }
+  to   { background-position: 240px 0; }
+}
+
+.preview-anim {
+  position: relative;
+  overflow: hidden;
+}
+
+.preview-anim .kb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: kb-zoom 16s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.preview-anim::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 34%;
+  background: linear-gradient(180deg, transparent, rgba(204, 0, 0, 0.18), rgba(255, 255, 255, 0.10), transparent);
+  animation: kb-scan 5.5s linear infinite;
+  pointer-events: none;
+}
+
+/* Slide automatica dell'anteprima foto (2-3 scatti) */
+.media-slideshow img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+.sl-2 img {
+  animation: media-fade-2 8s ease-in-out infinite;
+}
+.sl-2 img:nth-child(2) {
+  animation-delay: 4s;
+}
+
+.sl-3 img {
+  animation: media-fade-3 12s ease-in-out infinite;
+}
+.sl-3 img:nth-child(2) {
+  animation-delay: 4s;
+}
+.sl-3 img:nth-child(3) {
+  animation-delay: 8s;
+}
+
+@keyframes media-fade-2 {
+  0%   { opacity: 0; transform: scale(1.02); }
+  8%   { opacity: 1; }
+  42%  { opacity: 1; transform: scale(1.08); }
+  50%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes media-fade-3 {
+  0%   { opacity: 0; transform: scale(1.02); }
+  6%   { opacity: 1; }
+  29%  { opacity: 1; transform: scale(1.07); }
+  36%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Etichetta live sull'anteprima */
+.badge-live {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(204, 0, 0, 0.6);
+  background: rgba(10, 10, 11, 0.82);
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+/* Copertina animata per post senza foto */
+.cover-ph {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--surface);
+  background-image: repeating-linear-gradient(
+    115deg,
+    rgba(204, 0, 0, 0.18) 0 14px,
+    transparent 14px 46px
+  );
+  animation: stripes-move 14s linear infinite;
+}
+
+.cover-ph .wm {
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.12);
+}
+
+.cover-ph .wm b {
+  color: rgba(204, 0, 0, 0.55);
+}
+
+/* Slow Ken Burns anche sull'immagine hero */
+.hero-anim img {
+  animation: kb-zoom 28s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preview-anim .kb-img,
+  .preview-anim::after,
+  .cover-ph,
+  .hero-anim img,
+  .media-slideshow img {
+    animation: none;
+  }
+  .media-slideshow img { opacity: 0; }
+  .media-slideshow img:first-child { opacity: 1; }
+}
+
+/* ---------- Badge stile telemetria (riutilizzabile) ---------- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.32rem 0.65rem;
+  background: rgba(20, 20, 22, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--text-silver, #A1A1AA);
+  border-radius: 2px;
+}
+
+.badge-red {
+  background: var(--ducati-red, #CC0000);
+  border-color: var(--ducati-red, #CC0000);
+  color: #FFFFFF;
+}
+
+/* ---------- Card superficie (post, reel, tag) ---------- */
+
+.surface-card {
+  position: relative;
+  display: block;
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.surface-card:hover {
+  border-color: var(--ducati-red);
+  transform: translateY(-2px);
+}
+
+::selection {
+  background-color: var(--ducati-red);
+  color: #fff;
+}
+
+/* ============================================================
+   Tipografia di base per il contenuto degli articoli (Markdown).
+   ============================================================ */
+
+.prose-blog {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--text-white);
+}
+
+.prose-blog h2,
+.prose-blog h3,
+.prose-blog h4 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-white);
+}
+
+.prose-blog p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.prose-blog a {
+  color: var(--ducati-red);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose-blog code {
+  font-size: 0.9em;
+  background-color: var(--surface-elevated);
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.25rem;
+}
+
+.prose-blog pre {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  background-color: var(--surface);
+  color: var(--text-white);
+  border: 1px solid var(--line);
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+.prose-blog pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.prose-blog ul,
+.prose-blog ol {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-left: 1.25rem;
+}
+
+.prose-blog ul {
+  list-style: disc;
+}
+
+.prose-blog ol {
+  list-style: decimal;
+}
+
+.prose-blog li + li {
+  margin-top: 0.4rem;
+}
+
+.prose-blog blockquote {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--ducati-red);
+  font-style: italic;
+  color: var(--text-silver);
+}
+
+.prose-blog img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose-blog hr {
+  margin-block: 2.5rem;
+  border-color: var(--line);
+}

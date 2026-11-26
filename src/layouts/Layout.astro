@@ -1,0 +1,150 @@
+---
+import '../styles/tailwind.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Immagine per Open Graph/Twitter (assoluta, es. /fb/.../foto-01.jpg). */
+  image?: string;
+}
+
+const { title, description, image } = Astro.props;
+const pageTitle = title ? `${title} · DB3K` : 'DB3K';
+const siteName = 'DB3K';
+const siteDescription = description ?? 'DB3K — il diario della squadra MTB: gare, allenamenti, reel e album.';
+const siteOrigin = (Astro.site ?? new URL('https://db3k-blog.pages.dev')).origin;
+const siteImage = new URL(image ?? '/og-default.png', siteOrigin).href;
+const siteUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://db3k-blog.pages.dev');
+
+const nav = [
+  { label: 'Articoli', href: '/' },
+  { label: 'Pillole', href: '/pillole/' },
+  { label: 'Album', href: '/albums/' },
+  { label: 'Reel', href: '/reels/' },
+  { label: 'Tag', href: '/tags/' },
+  { label: 'Chi siamo', href: '/chi-siamo/' },
+  { label: 'Contatti', href: '/contatti/' },
+  { label: 'Feed RSS', href: '/rss.xml' },
+];
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="google-site-verification" content="VsU77y5C8dy-R3XWL7IRA0dGRpRiGq7QdNge5xQmStI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="DB3K — Diario di Bordo" href={new URL('/rss.xml', siteOrigin).href} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={siteDescription} />
+
+    <!-- Canonical e Open Graph -->
+    <link rel="canonical" href={siteUrl.href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={siteDescription} />
+    <meta property="og:image" content={siteImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content={siteUrl.href} />
+    <meta property="og:locale" content="it_IT" />
+    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={siteDescription} />
+    <meta name="twitter:image" content={siteImage} />
+
+    <!-- JSON-LD: WebSite schema -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "DB3K — Diario di Bordo",
+      alternateName: "ASD DRIZ Bikers 3000",
+      url: siteUrl.href,
+      description: siteDescription,
+      inLanguage: "it-IT",
+    })} />
+    <slot name="head" />
+  </head>
+
+  <body class="flex min-h-screen flex-col bg-asphalt text-ink antialiased">
+    <header class="border-b border-lunar bg-asphalt/95 backdrop-blur sticky top-0 z-50">
+      <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-6 py-4">
+        <a href="/" class="flex items-center gap-2.5">
+          <span class="inline-block h-5 w-1.5 skew-x-[-12deg] bg-ducati"></span>
+          <span class="text-2xl font-black italic tracking-tight">
+            DB<span class="text-ducati">3K</span>
+          </span>
+        </a>
+        <nav class="flex items-center gap-5 text-xs font-bold uppercase tracking-wider sm:gap-7">
+          {nav.map((item) => {
+            const active =
+              item.href === '/'
+                ? Astro.url.pathname === '/'
+                : Astro.url.pathname.startsWith(item.href);
+            return (
+              <a
+                href={item.href}
+                class:list={['transition hover:text-ducati', active ? 'text-ducati' : 'text-silver']}
+              >
+                {item.label}
+              </a>
+            );
+          })}
+        </nav>
+        <!-- Contatore visitatori: /api/hit (Pages Function + KV) in produzione;
+             fallback locale (localStorage) in dev, dove la function non esiste. -->
+        <span
+          id="visitors-meter"
+          class="inline-flex items-center gap-2 rounded-full border border-lunar bg-asphalt px-3.5 py-1.5 text-xs font-medium tabular-nums text-silver"
+          title="Contatore pubblico dei passaggi sul diario — si aggiorna da solo, niente cookie."
+        >
+          <b id="visitors-count" class="min-w-[3ch] text-center text-sm font-bold tabular-nums">…</b>
+          <span>visitatori</span>
+        </span>
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <script type="module">
+      (() => {
+        const meter = document.getElementById('visitors-meter');
+        const el = document.getElementById('visitors-count');
+        if (!meter || !el) return;
+        const fmt = (n: number) => new Intl.NumberFormat('it-IT').format(n);
+        const localFallback = () => {
+          const key = 'db3k-local-visits';
+          const v = (parseInt(localStorage.getItem(key) ?? '0', 10) + 1);
+          localStorage.setItem(key, String(v));
+          el.textContent = fmt(v);
+          meter.title = 'Contatore locale (dev) — in produzione usa il conteggio Cloudflare.';
+        };
+        (async () => {
+          try {
+            const r = await fetch('/api/hit', { signal: AbortSignal.timeout(8000) });
+            if (!r.ok) throw new Error('non-200');
+            const j = (await r.json()) as { value?: number };
+            el.textContent = fmt(j.value ?? 0);
+          } catch {
+            localFallback();
+          }
+        })();
+      })();
+    </script>
+
+    <footer class="border-t border-lunar">
+      <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-8 text-sm text-silver">
+        <p>© {new Date().getFullYear()} DB3K · Fatto con Astro + Tailwind CSS</p>
+        <p class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
+          <span class="inline-block h-4 w-4 bg-ducati"></span>
+          Ducati Red #CC0000
+        </p>
+        <p class="text-sm text-silver"><a href="/rss.xml" class="underline hover:text-ducati">Feed RSS</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

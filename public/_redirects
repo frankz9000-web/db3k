@@ -1,0 +1,8 @@
+# Redirect DB3K — vecchie URL dei post "notizie dal web" (pagine rimosse dal sito)
+# 301 verso la home: link esterni (es. da Facebook) non cadono su un 404.
+/posts/notizie-ciclismo-novembre-2026 / 301
+/posts/notizie-ciclismo-ottobre-novembre-2026 / 301
+/posts/notizie-vuelta-pogacar-ciclomercato-novembre-2026 / 301
+/posts/notizie-dal-web/notizie-ciclismo-novembre-2026 / 301
+/posts/notizie-dal-web/notizie-ciclismo-ottobre-novembre-2026 / 301
+/posts/notizie-dal-web/notizie-vuelta-pogacar-ciclomercato-novembre-2026 / 301

@@ -1,0 +1,38 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import PostGrid from '../components/PostGrid.astro';
+import { getCollection } from 'astro:content';
+import path from 'node:path';
+
+// Stabile sia in dev sia in build: la radice del progetto (cwd) + public/
+const publicDir = path.resolve(process.cwd(), 'public');
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+
+// Pagina 1 (l'indice). Le altre le genera page/[...page].astro.
+const pageSize = 6;
+const lastPage = Math.max(1, Math.ceil(posts.length / pageSize));
+const page = {
+  data: posts.slice(0, pageSize),
+  size: pageSize,
+  total: posts.length,
+  currentPage: 1,
+  lastPage,
+  url: {
+    current: '/',
+    next: lastPage > 1 ? '/page/2/' : undefined,
+    prev: undefined,
+    first: undefined,
+    last: lastPage > 1 ? `/page/${lastPage}/` : undefined,
+  },
+};
+---
+
+<Layout>
+  <Hero />
+
+  <PostGrid page={page} publicDir={publicDir} />
+</Layout>

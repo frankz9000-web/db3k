@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.db3k.diariodibordo",
+      "sha256_cert_fingerprints": [
+        "D9:1E:04:0E:38:D1:C8:B1:93:B4:81:B2:0E:76:5A:F6:79:C5:E9:64:38:FD:AB:78:F6:0A:E2:CA:36:70:80:6D"
+      ]
+    }
+  }
+]

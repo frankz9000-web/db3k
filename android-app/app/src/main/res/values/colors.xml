@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Ducati Red Palette -->
+    <color name="ducati_red">#E31837</color>
+    <color name="ducati_red_dark">#C00000</color>
+    <color name="ducati_red_light">#FF4444</color>
+    <color name="ducati_red_pressed">#A00000</color>
+    <color name="ducati_black">#0D0D0D</color>
+    <color name="ducati_dark_gray">#1A1A1A</color>
+    <color name="ducati_medium_gray">#2D2D2D</color>
+    <color name="ducati_light_gray">#3D3D3D</color>
+    <color name="ducati_silver">#C0C0C0</color>
+    <color name="ducati_white">#FFFFFF</color>
+    <color name="ducati_off_white">#F5F5F5</color>
+    
+    <!-- Semantic Colors -->
+    <color name="colorPrimary">@color/ducati_red</color>
+    <color name="colorPrimaryVariant">@color/ducati_red_dark</color>
+    <color name="colorSecondary">@color/ducati_silver</color>
+    <color name="colorSecondaryVariant">@color/ducati_light_gray</color>
+    <color name="colorBackground">@color/ducati_black</color>
+    <color name="colorSurface">@color/ducati_dark_gray</color>
+    <color name="colorError">@color/ducati_red_light</color>
+    <color name="colorOnPrimary">@color/ducati_white</color>
+    <color name="colorOnSecondary">@color/ducati_black</color>
+    <color name="colorOnBackground">@color/ducati_white</color>
+    <color name="colorOnSurface">@color/ducati_white</color>
+    <color name="colorOnError">@color/ducati_white</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">@color/ducati_white</color>
+    <color name="text_secondary">#B0B0B0</color>
+    <color name="text_tertiary">#808080</color>
+    <color name="text_on_red">@color/ducati_white</color>
+    <color name="text_link">#FF6B6B</color>
+    
+    <!-- Status Colors -->
+    <color name="status_online">#00E676</color>
+    <color name="status_offline">#FF5252</color>
+    <color name="status_pending">#FFD600</color>
+    
+    <!-- Notification Channel Colors -->
+    <color name="notification_channel_new_post">#E31837</color>
+    <color name="notification_channel_race">#FF6B00</color>
+    <color name="notification_channel_event">#00E676</color>
+    
+    <!-- Dividers & Borders -->
+    <color name="divider_color">#333333</color>
+    <color name="border_color">#444444</color>
+    
+    <!-- Ripple & Selection -->
+    <color name="ripple_color">#33E31837</color>
+    <color name="selection_color">#1AE31837</color>
+    
+    <!-- WebView -->
+    <color name="webview_background">@color/ducati_black</color>
+
+    <!-- System Colors -->
+    <color name="transparent">#00000000</color>
+</resources>

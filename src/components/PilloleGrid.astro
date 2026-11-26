@@ -1,0 +1,86 @@
+---
+import PilloleCard from './PilloleCard.astro';
+import { getPostMedia } from '../utils/media';
+
+interface Props {
+  page: any;
+  publicDir: string;
+}
+
+const { page, publicDir } = Astro.props;
+const pillole = page.data;
+
+function pageUrl(n: number) {
+  return n === 1 ? '/pillole/' : `/pillole/page/${n}/`;
+}
+
+const pages = Array.from({ length: page.lastPage }, (_, i) => i + 1);
+const prevUrl = page.currentPage > 1 ? pageUrl(page.currentPage - 1) : undefined;
+const nextUrl = page.currentPage < page.lastPage ? pageUrl(page.currentPage + 1) : undefined;
+
+const categoryLabels: Record<string, string> = {
+  allenamento: '💪 Allenamento',
+  nutrizione: '🍎 Nutrizione',
+  attrezzatura: '🎒 Attrezzatura',
+  sicurezza: '🔒 Sicurezza',
+  tecnica: '🎯 Tecnica',
+};
+---
+
+<div class="mx-auto w-full max-w-5xl px-6 py-14" id="pillole">
+  <div class="mb-8 flex items-end justify-between gap-4">
+    <h2 class="text-3xl font-black tracking-tight sm:text-4xl">
+      Pillole<span class="text-ducati">.</span>
+    </h2>
+    <span class="badge badge-red mb-1">
+      {page.total} PILL{page.lastPage > 1 ? ` · PAG. ${page.currentPage}/${page.lastPage}` : ''}
+    </span>
+  </div>
+
+  <ul class="grid gap-4 sm:grid-cols-2">
+    {pillole.map((pilloa: any) => (
+      <li>
+        <PilloleCard
+          title={pilloa.data.title}
+          description={pilloa.data.description}
+          pubDate={pilloa.data.pubDate}
+          href={`/pillole/${pilloa.id}/`}
+          emoji={pilloa.data.emoji}
+          category={pilloa.data.category}
+          categoryLabel={categoryLabels[pilloa.data.category] ?? pilloa.data.category}
+        />
+      </li>
+    ))}
+  </ul>
+
+  {
+    page.lastPage > 1 && (
+      <nav class="mt-10 flex flex-wrap items-center justify-center gap-2" aria-label="Paginazione pillole">
+        {
+          prevUrl && (
+            <a href={prevUrl} class="btn btn-secondary !px-3 !py-2 text-xs">← Prec</a>
+          )
+        }
+
+        {pages.map((n) => (
+          <a
+            href={pageUrl(n)}
+            aria-current={n === page.currentPage ? 'page' : undefined}
+            class:list={[
+              'flex h-9 min-w-9 items-center justify-center rounded-sm px-2 text-sm font-bold transition',
+              n === page.currentPage ? 'bg-ducati text-white' : 'text-silver hover:text-ducati',
+            ]}
+          >
+            {n}
+          </a>
+        ))}
+
+        {
+          nextUrl && (
+            <a href={nextUrl} class="btn btn-secondary !px-3 !py-2 text-xs">Succ →</a>
+          )
+        }
+      </nav>
+    )
+  }
+</div>

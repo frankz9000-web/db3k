@@ -1,0 +1,10 @@
+const fs = require("fs");
+const ix = fs.readFileSync("src/pages/index.astro", "utf8").split("\n");
+console.log("--- index 18-40 ---");
+for (let n = 17; n <= 39 && n < ix.length; n++) console.log(n + 1, "::", JSON.stringify(ix[n].slice(0, 100)));
+const sl = fs.readFileSync("src/pages/posts/[...slug].astro", "utf8").split("\n");
+console.log("--- slug 20-26 ---");
+for (let n = 19; n <= 25 && n < sl.length; n++) console.log(n + 1, "::", JSON.stringify(sl[n].slice(0, 100)));
+const md = fs.readFileSync("src/posts/benvenuto.md", "utf8").split("\n");
+console.log("--- post md head ---");
+for (let n = 0; n <= Math.min(md.length, 14); n++) console.log(n + 1, "::", JSON.stringify(md[n].slice(0, 90)));
