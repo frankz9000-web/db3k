@@ -15,6 +15,7 @@ jobs:
     timeout-minutes: 30
     env:
       ANDROID_SDK_ROOT: /home/runner/work/android-sdk
+      ANDROID_HOME: /home/runner/work/android-sdk
 
     steps:
       # 1. Checkout
@@ -56,19 +57,39 @@ jobs:
       - name: Accept Android SDK licenses
         run: yes | sdkmanager --licenses || true
 
-      # 5. Build with Gradle Action
+      # 5. Generate Gradle Wrapper (if not present)
+      - name: Generate Gradle Wrapper
+        working-directory: android-app
+        run: |
+          GRADLE_VERSION=8.5
+          wget -q "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" -O /tmp/gradle.zip
+          unzip -q /tmp/gradle.zip -d /tmp
+          export PATH="/tmp/gradle-${GRADLE_VERSION}/bin:$PATH"
+          gradle wrapper --gradle-version ${GRADLE_VERSION} --distribution-type all
+          chmod +x gradlew
+          echo "Gradle wrapper generated"
+
+      # 5. Cache Gradle
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      # 6. Build Debug APK (direct gradle run)
       - name: Build Debug APK
-        uses: gradle/gradle-build-action@v3
+        working-directory: android-app
         env:
           ANDROID_SDK_ROOT: /home/runner/work/android-sdk
           ANDROID_HOME: /home/runner/work/android-sdk
-        with:
-          working-directory: android-app
-          arguments: assembleDebug --no-daemon --stacktrace
-          gradle-version: wrapper
-          cache-read-only: false
+        run: |
+          export PATH="/home/runner/work/android-sdk/cmdline-tools/latest/bin:/home/runner/work/android-sdk/platform-tools:$PATH"
+          ./gradlew assembleDebug --no-daemon --stacktrace
 
-      # 6. Verify APK
+      # 7. Verify APK
       - name: Verify APK
         run: |
           ls -la android-app/app/build/outputs/apk/debug/
