@@ -26,13 +26,16 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      # 3. Setup Android SDK
+      # 3. Setup Android SDK (using cmdline-tools)
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
           api-level: 34
           ndk-version: r26c
           emulator: false
+          cmdline-tools-version: latest
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses || true
 
       # 4. Cache Gradle dependencies
       - name: Cache Gradle packages
