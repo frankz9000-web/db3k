@@ -12,7 +12,7 @@ jobs:
   build:
     name: Build Debug APK
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     defaults:
       run:
         working-directory: android-app
@@ -59,7 +59,18 @@ jobs:
           echo "Android SDK installed at $ANDROID_SDK_ROOT"
           sdkmanager --list_installed | head -20
 
-      # 4. Cache Gradle
+      # 4. Generate Gradle Wrapper (since not committed to repo)
+      - name: Generate Gradle Wrapper
+        run: |
+          GRADLE_VERSION=8.5
+          wget -q "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" -O /tmp/gradle.zip
+          unzip -q /tmp/gradle.zip -d /tmp
+          export PATH="/tmp/gradle-${GRADLE_VERSION}/bin:$PATH"
+          gradle wrapper --gradle-version ${GRADLE_VERSION} --distribution-type all
+          chmod +x gradlew
+          echo "Gradle wrapper generated"
+
+      # 5. Cache Gradle
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
@@ -69,19 +80,12 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
 
-      # 5. Make gradlew executable
-      - name: Make gradlew executable
-        working-directory: android-app
-        run: chmod +x gradlew
-
       # 6. Build Debug APK
       - name: Build Debug APK
-        working-directory: android-app
         run: ./gradlew assembleDebug --no-daemon --stacktrace
 
       # 7. Verify APK
       - name: Verify APK
-        working-directory: android-app
         run: |
           ls -la app/build/outputs/apk/debug/
           APK_PATH=$(find app/build/outputs/apk/debug -name "*.apk" | head -1)
