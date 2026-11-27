@@ -1,0 +1,43 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="App DB3K — Scarica l'app Android">
+  <section class="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
+    <header class="mb-10 text-center">
+      <h1 class="text-3xl font-black italic tracking-tight text-ink sm:text-5xl">DB3K Blog App<span class="text-ducati">.</span></h1>
+      <p class="mt-4 text-lg text-silver">Scarica l'app Android per ricevere le notifiche push direttamente sul tuo smartphone.</p>
+    </header>
+
+    <div class="bg-ducati-dark rounded-xl p-8 border border-ducati-red text-center">
+      <h2 class="text-2xl font-bold text-ink mb-4">Scarica l'APK</h2>
+      <p class="text-silver mb-6">
+        L'app ti permette di ricevere le notifiche push della Ducati direttamente sul tuo telefono. Installa l'APK sul tuo dispositivo Android.
+      </p>
+      <a href="/app-debug.apk" download class="bg-ducati-red text-white px-8 py-4 rounded-lg font-bold text-lg inline-block hover:bg-ducati-red-dark transition colo
+rs">
+        ⬇️ Scarica DB3K Blog App APK (15 MB)
+      </a>
+    </div>
+
+    <div class="mt-12 text-center">
+      <h2 class="text-xl font-bold text-ink mb-4">Inquadra con il telefono</h2>
+      <img
+        src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://db3k-blog.pages.dev/app-debug.apk"
+        alt="QR Code per scaricare l'app DB3K"
+        class="rounded-lg border border-lunar"
+      />
+      <p class="mt-4 text-silver text-sm">Apri la fotocamera e inquadra il QR code per scaricare l'app</p>
+    </div>
+
+    <nav class="mt-16 flex items-center justify-between border-t border-lunar pt-6 text-sm text-silver">
+      <a href="/" class="font-semibold tracking-wide text-ink transition hover:text-ducati">← Torna alla home</a>
+      <span class="text-[11px] font-bold tracking-widest">DB<span class="text-ducati">3K</span></span>
+    </nav>
+  </section>
+</Layout>
+
+<style>
+  .prose { color: #9ca3af; }
+  .prose strong { color: #f3f4f6; }
+</style>
