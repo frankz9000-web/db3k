@@ -44,6 +44,14 @@ class PostsViewModel @Inject constructor(
             _error.value = null
 
             try {
+                // First, sync from API
+                val result = postRepository.syncPosts(forceRefresh = false)
+                if (result.isFailure) {
+                    _error.postValue(result.exceptionOrNull()?.message ?: "Errore caricamento post")
+                    _isLoading.postValue(false)
+                    return@launch
+                }
+
                 val allPosts = postRepository.getAllPosts().first()
 
                 // Extract unique categories

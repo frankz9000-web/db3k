@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Adaptive icon foreground - Ducati shield with DB3K -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Outer shield -->
+    <!-- Ducati Red Shield -->
     <path
         android:fillColor="#E31837"
         android:pathData="M54,8C30.5,8 10,26.5 10,50c0,26.5 37,52 44,58c7,-6 44,-31.5 44,-58C98,26.5 77.5,8 54,8z" />
-    <!-- Inner highlight -->
-    <path
-        android:fillColor="#FF4444"
-        android:pathData="M54,18C39,18 26,31 26,46c0,15.5 22,35 28,40c6,-5 28,-24.5 28,-40C82,31 69,18 54,18z" />
-    <!-- DB3K Letters -->
-    <group android:translateX="22" android:translateY="34">
+    <!-- Ducati White Logo DB3K -->
+    <group android:translateX="38" android:translateY="34">
         <!-- D -->
         <path
             android:fillColor="#FFFFFF"
