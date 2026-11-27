@@ -8,7 +8,10 @@ import com.db3k.diariodibordo.data.model.Post
 import com.db3k.diariodibordo.data.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 /**
@@ -41,24 +44,33 @@ class HomeViewModel @Inject constructor(
             _error.value = null
 
             // Load latest posts from local DB
-            postRepository.getLatestPosts(10)
-                .collect { posts ->
+            val job1 = postRepository.getLatestPosts(10)
+                .onEach { posts ->
                     _latestPosts.postValue(posts)
                     _isLoading.postValue(false)
                 }
-                .invokeOnCompletion { cause ->
-                    if (cause != null) {
-                        _error.postValue("Errore caricamento post: ${cause.message}")
-                        _isLoading.postValue(false)
-                    }
+                .launchIn(viewModelScope)
+
+            job1.invokeOnCompletion { cause ->
+                if (cause != null) {
+                    _error.postValue("Errore caricamento post: ${cause.message}")
+                    _isLoading.postValue(false)
                 }
+            }
 
             // Load upcoming events
-            postRepository.getLatestPosts(20)
-                .collect { posts ->
+            val job2 = postRepository.getLatestPosts(20)
+                .onEach { posts ->
                     val events = posts.filter { it.isEvent() }
                     _upcomingEvents.postValue(events)
                 }
+                .launchIn(viewModelScope)
+
+            job2.invokeOnCompletion { cause ->
+                if (cause != null) {
+                    _error.postValue("Errore caricamento eventi: ${cause.message}")
+                }
+            }
         }
     }
 

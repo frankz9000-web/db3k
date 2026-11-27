@@ -73,7 +73,7 @@ class PostDetailFragment : Fragment() {
                 useWideViewPort = true
                 builtInZoomControls = true
                 displayZoomControls = false
-                supportZoom = true
+                setSupportZoom(true)
                 textZoom = 100
             }
             webViewClient = object : WebViewClient() {
@@ -94,7 +94,7 @@ class PostDetailFragment : Fragment() {
     private fun observeData() {
         viewModel.post.observe(viewLifecycleOwner) { post ->
             currentPost = post
-            bindPost(post)
+            post?.let { bindPost(it) }
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
@@ -256,7 +256,7 @@ class PostDetailFragment : Fragment() {
         currentPost?.url?.let { url ->
             val clipboard = requireContext().getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
             val clip = android.content.ClipData.newPlainText("Post Link", url)
-            clipboard.primaryClip = clip
+            clipboard.setPrimaryClip(clip)
             com.google.android.material.snackbar.Snackbar.make(binding.root, "Link copiato", com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show()
         }
     }

@@ -2,13 +2,13 @@ package com.db3k.diariodibordo
 
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.ProcessLifecycleOwner
 import com.db3k.diariodibordo.data.preferences.UserPreferences
-import com.db3k.diariodibordo.messaging.FCMLifecycleObserver
+import com.db3k.diariodibordo.network.ApiService
 import com.google.firebase.FirebaseApp
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 /**
  * Main Application class with Hilt integration
@@ -19,19 +19,19 @@ class DB3KApplication : Application() {
     @Inject
     lateinit var userPreferences: UserPreferences
 
+    @Inject
+    lateinit var apiService: ApiService
+
     override fun onCreate() {
         super.onCreate()
 
         // Initialize Firebase
         FirebaseApp.initializeApp(this)
 
-        // Register FCM lifecycle observer for token management
-        ProcessLifecycleOwner.get().lifecycle.addObserver(FCMLifecycleObserver(this))
-
-        // Initialize preferences
-        userPreferences.isFirstLaunch.subscribe { isFirst ->
+        // Initialize preferences - set defaults on first launch
+        runBlocking {
+            val isFirst = userPreferences.isFirstLaunch.first()
             if (isFirst) {
-                // Set defaults for first launch
                 userPreferences.setPushEnabled(true)
                 userPreferences.setPushNewPosts(true)
                 userPreferences.setPushRaceResults(true)
@@ -47,9 +47,11 @@ class DB3KApplication : Application() {
         lateinit var instance: DB3KApplication
             private set
 
-        fun getInstance(): DB3KApplication = instance
-
         fun getContext(): Context = instance.applicationContext
+
+        fun getUserPreferences(): UserPreferences = instance.userPreferences
+
+        fun getApiService(): ApiService = instance.apiService
     }
 
     override fun attachBaseContext(base: Context) {

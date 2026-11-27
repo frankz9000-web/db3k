@@ -8,7 +8,11 @@ import com.db3k.diariodibordo.data.model.Notification
 import com.db3k.diariodibordo.data.repository.NotificationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 /**
@@ -40,22 +44,24 @@ class NotificationsViewModel @Inject constructor(
             _isLoading.value = true
             _error.value = null
 
-            notificationRepository.getAllNotifications()
-                .collect { notifications ->
+            val job1 = notificationRepository.getAllNotifications()
+                .onEach { notifications ->
                     _notifications.postValue(notifications)
                     _isLoading.postValue(false)
                 }
-                .invokeOnCompletion { cause ->
-                    if (cause != null) {
-                        _error.postValue("Errore caricamento notifiche: ${cause.message}")
-                        _isLoading.postValue(false)
-                    }
-                }
+                .launchIn(viewModelScope)
 
-            notificationRepository.getUnreadCount()
-                .collect { count ->
-                    _unreadCount.postValue(count)
+            job1.invokeOnCompletion { cause ->
+                if (cause != null) {
+                    _error.postValue("Errore caricamento notifiche: ${cause.message}")
+                    _isLoading.postValue(false)
                 }
+            }
+
+            val job2 = viewModelScope.launch {
+                val count = notificationRepository.getUnreadCount()
+                _unreadCount.postValue(count)
+            }
         }
     }
 
@@ -95,7 +101,8 @@ class NotificationsViewModel @Inject constructor(
     /** Clear all notifications */
     fun clearAllNotifications() {
         viewModelScope.launch {
-            notificationRepository.getAllNotifications().first().forEach { notification ->
+            val notifications = notificationRepository.getAllNotifications().first()
+            for (notification in notifications) {
                 notificationRepository.deleteNotification(notification.id)
             }
             loadNotifications()

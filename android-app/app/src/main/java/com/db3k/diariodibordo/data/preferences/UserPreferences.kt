@@ -1,116 +1,130 @@
 package com.db3k.diariodibordo.data.preferences
 
 import android.content.Context
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.PreferencesKeys
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.rx.preferencesDataStore
-import androidx.datastore.rx.RxDataStore
-import com.db3k.diariodibordo.BuildConfig
-import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import android.content.SharedPreferences
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 /**
- * User preferences using DataStore
+ * User preferences using SharedPreferences
  */
 class UserPreferences private constructor(
-    private val dataStore: RxDataStore<Preferences>
+    private val prefs: SharedPreferences
 ) {
     companion object {
         // Keys
-        private val PUSH_ENABLED = booleanPreferencesKey("push_enabled")
-        private val PUSH_NEW_POSTS = booleanPreferencesKey("push_new_posts")
-        private val PUSH_RACE_RESULTS = booleanPreferencesKey("push_race_results")
-        private val PUSH_EVENTS = booleanPreferencesKey("push_events")
-        private val PUSH_SOUND = booleanPreferencesKey("push_sound")
-        private val PUSH_VIBRATION = booleanPreferencesKey("push_vibration")
-        private val FCM_TOKEN = stringPreferencesKey("fcm_token")
-        private val LAST_SYNC = longPreferencesKey("last_sync")
-        private val OFFLINE_MODE = booleanPreferencesKey("offline_mode")
-        private val THEME_MODE = intPreferencesKey("theme_mode") // 0=system, 1=light, 2=dark
-        private val FIRST_LAUNCH = booleanPreferencesKey("first_launch")
-
-        @Suppress("UNUSED_PARAMETER")
-        private fun <T> Preferences.Key<T> = PreferencesKeys.key<T>()
+        private val PUSH_ENABLED = "push_enabled"
+        private val PUSH_NEW_POSTS = "push_new_posts"
+        private val PUSH_RACE_RESULTS = "push_race_results"
+        private val PUSH_EVENTS = "push_events"
+        private val PUSH_SOUND = "push_sound"
+        private val PUSH_VIBRATION = "push_vibration"
+        private val FCM_TOKEN = "fcm_token"
+        private val LAST_SYNC = "last_sync"
+        private val OFFLINE_MODE = "offline_mode"
+        private val THEME_MODE = "theme_mode" // 0=system, 1=light, 2=dark
+        private val FIRST_LAUNCH = "first_launch"
 
         fun create(context: Context): UserPreferences {
-            val dataStore = context.preferencesDataStore(name = "db3k_prefs")
-            return UserPreferences(dataStore)
+            val prefs = context.getSharedPreferences("db3k_prefs", Context.MODE_PRIVATE)
+            return UserPreferences(prefs)
         }
     }
 
     // Push Notifications
-    val pushEnabled: Flowable<Boolean> = dataStore.data
-        .map { it[PUSH_ENABLED] ?: true }
-        .subscribeOn(Schedulers.io())
+    val pushEnabled: Flow<Boolean> = flow { emit(prefs.getBoolean(PUSH_ENABLED, true)) }
 
-    fun setPushEnabled(enabled: Boolean) = dataStore.updateDataAsync { it[PUSH_ENABLED] = enabled }
+    fun setPushEnabled(enabled: Boolean) {
+        val editor = prefs.edit()
+        editor.putBoolean(PUSH_ENABLED, enabled)
+        editor.apply()
+    }
 
-    val pushNewPosts: Flowable<Boolean> = dataStore.data
-        .map { it[PUSH_NEW_POSTS] ?: true }
-        .subscribeOn(Schedulers.io())
+    val pushNewPosts: Flow<Boolean> = flow { emit(prefs.getBoolean(PUSH_NEW_POSTS, true)) }
 
-    fun setPushNewPosts(enabled: Boolean) = dataStore.updateDataAsync { it[PUSH_NEW_POSTS] = enabled }
+    fun setPushNewPosts(enabled: Boolean) {
+        val editor = prefs.edit()
+        editor.putBoolean(PUSH_NEW_POSTS, enabled)
+        editor.apply()
+    }
 
-    val pushRaceResults: Flowable<Boolean> = dataStore.data
-        .map { it[PUSH_RACE_RESULTS] ?: true }
-        .subscribeOn(Schedulers.io())
+    val pushRaceResults: Flow<Boolean> = flow { emit(prefs.getBoolean(PUSH_RACE_RESULTS, true)) }
 
-    fun setPushRaceResults(enabled: Boolean) = dataStore.updateDataAsync { it[PUSH_RACE_RESULTS] = enabled }
+    fun setPushRaceResults(enabled: Boolean) {
+        val editor = prefs.edit()
+        editor.putBoolean(PUSH_RACE_RESULTS, enabled)
+        editor.apply()
+    }
 
-    val pushEvents: Flowable<Boolean> = dataStore.data
-        .map { it[PUSH_EVENTS] ?: true }
-        .subscribeOn(Schedulers.io())
+    val pushEvents: Flow<Boolean> = flow { emit(prefs.getBoolean(PUSH_EVENTS, true)) }
 
-    fun setPushEvents(enabled: Boolean) = dataStore.updateDataAsync { it[PUSH_EVENTS] = enabled }
+    fun setPushEvents(enabled: Boolean) {
+        val editor = prefs.edit()
+        editor.putBoolean(PUSH_EVENTS, enabled)
+        editor.apply()
+    }
 
-    val pushSound: Flowable<Boolean> = dataStore.data
-        .map { it[PUSH_SOUND] ?: true }
-        .subscribeOn(Schedulers.io())
+    val pushSound: Flow<Boolean> = flow { emit(prefs.getBoolean(PUSH_SOUND, true)) }
 
-    fun setPushSound(enabled: Boolean) = dataStore.updateDataAsync { it[PUSH_SOUND] = enabled }
+    fun setPushSound(enabled: Boolean) {
+        val editor = prefs.edit()
+        editor.putBoolean(PUSH_SOUND, enabled)
+        editor.apply()
+    }
 
-    val pushVibration: Flowable<Boolean> = dataStore.data
-        .map { it[PUSH_VIBRATION] ?: true }
-        .subscribeOn(Schedulers.io())
+    val pushVibration: Flow<Boolean> = flow { emit(prefs.getBoolean(PUSH_VIBRATION, true)) }
 
-    fun setPushVibration(enabled: Boolean) = dataStore.updateDataAsync { it[PUSH_VIBRATION] = enabled }
+    fun setPushVibration(enabled: Boolean) {
+        val editor = prefs.edit()
+        editor.putBoolean(PUSH_VIBRATION, enabled)
+        editor.apply()
+    }
 
     // FCM Token
-    val fcmToken: Flowable<String?> = dataStore.data
-        .map { it[FCM_TOKEN] }
-        .subscribeOn(Schedulers.io())
+    val fcmToken: Flow<String?> = flow { emit(prefs.getString(FCM_TOKEN, null)) }
 
-    suspend fun setFcmToken(token: String?) = dataStore.updateData { it[FCM_TOKEN] = token }
+    suspend fun setFcmToken(token: String?) {
+        val editor = prefs.edit()
+        editor.putString(FCM_TOKEN, token)
+        editor.apply()
+    }
 
     // Sync
-    val lastSync: Flowable<Long> = dataStore.data
-        .map { it[LAST_SYNC] ?: 0L }
-        .subscribeOn(Schedulers.io())
+    val lastSync: Flow<Long> = flow { emit(prefs.getLong(LAST_SYNC, 0L)) }
 
-    suspend fun setLastSync(timestamp: Long) = dataStore.updateData { it[LAST_SYNC] = timestamp }
+    suspend fun setLastSync(timestamp: Long) {
+        val editor = prefs.edit()
+        editor.putLong(LAST_SYNC, timestamp)
+        editor.apply()
+    }
 
     // Offline Mode
-    val offlineMode: Flowable<Boolean> = dataStore.data
-        .map { it[OFFLINE_MODE] ?: false }
-        .subscribeOn(Schedulers.io())
+    val offlineMode: Flow<Boolean> = flow { emit(prefs.getBoolean(OFFLINE_MODE, false)) }
 
-    fun setOfflineMode(enabled: Boolean) = dataStore.updateDataAsync { it[OFFLINE_MODE] = enabled }
+    fun setOfflineMode(enabled: Boolean) {
+        val editor = prefs.edit()
+        editor.putBoolean(OFFLINE_MODE, enabled)
+        editor.apply()
+    }
 
     // Theme
-    val themeMode: Flowable<Int> = dataStore.data
-        .map { it[THEME_MODE] ?: 0 }
-        .subscribeOn(Schedulers.io())
+    val themeMode: Flow<Int> = flow { emit(prefs.getInt(THEME_MODE, 0)) }
 
-    fun setThemeMode(mode: Int) = dataStore.updateDataAsync { it[THEME_MODE] = mode }
+    fun setThemeMode(mode: Int) {
+        val editor = prefs.edit()
+        editor.putInt(THEME_MODE, mode)
+        editor.apply()
+    }
 
     // First Launch
-    val isFirstLaunch: Flowable<Boolean> = dataStore.data
-        .map { it[FIRST_LAUNCH] ?: true }
-        .subscribeOn(Schedulers.io())
+    val isFirstLaunch: Flow<Boolean> = flow { emit(prefs.getBoolean(FIRST_LAUNCH, true)) }
 
-    fun setFirstLaunchComplete() = dataStore.updateDataAsync { it[FIRST_LAUNCH] = false }
+    fun setFirstLaunchComplete() {
+        val editor = prefs.edit()
+        editor.putBoolean(FIRST_LAUNCH, false)
+        editor.apply()
+    }
 
     // App Version
-    fun getAppVersion(): String = BuildConfig.VERSION_NAME
+    fun getAppVersion(): String = "1.0.0"
 }

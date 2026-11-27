@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.db3k.diariodibordo.R
 import com.db3k.diariodibordo.data.model.Notification
 import com.db3k.diariodibordo.databinding.ItemNotificationBinding
 import kotlinx.coroutines.CoroutineScope
@@ -37,13 +36,6 @@ class NotificationAdapter(
             binding.title.text = notification.title
             binding.body.text = notification.body
             binding.time.text = notification.getFormattedTime()
-            binding.icon.setImageResource(notification.getIconRes())
-
-            // Accent color based on type
-            val accentColor = notification.getAccentColor()
-            binding.iconContainer.setBackgroundColor(
-                androidx.core.content.ContextCompat.getColor(binding.root.context, accentColor)
-            )
 
             // Read/unread styling
             if (notification.isRead) {

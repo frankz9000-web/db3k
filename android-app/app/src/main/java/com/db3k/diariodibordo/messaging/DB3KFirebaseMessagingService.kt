@@ -5,21 +5,19 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
 import com.db3k.diariodibordo.R
 import com.db3k.diariodibordo.data.model.Notification
 import com.db3k.diariodibordo.data.model.NotificationType
+import com.db3k.diariodibordo.data.preferences.UserPreferences
 import com.db3k.diariodibordo.data.repository.NotificationRepository
 import com.db3k.diariodibordo.ui.MainActivity
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -27,8 +25,8 @@ import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -48,69 +46,79 @@ class DB3KFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Log.d(TAG, "New FCM token: $token")
-        // Save token and register with backend
-        userPreferences.setFcmToken(token)
-        // Register with backend will be handled by FCMLifecycleObserver
+        CoroutineScope(Dispatchers.IO).launch {
+            userPreferences.setFcmToken(token)
+        }
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         Log.d(TAG, "Message received: ${remoteMessage.from}")
 
-        // Check if push is enabled
-        val pushEnabled = userPreferences.pushEnabled.firstOrNull() ?: true
-        if (!pushEnabled) {
-            Log.d(TAG, "Push notifications disabled, ignoring message")
-            return
-        }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // Check if push is enabled
+                val pushEnabled = userPreferences.pushEnabled.first() ?: true
+                if (!pushEnabled) {
+                    Log.d(TAG, "Push notifications disabled, ignoring message")
+                    return@launch
+                }
 
-        // Handle notification payload
-        val notification = remoteMessage.notification
-        val data = remoteMessage.data
+                // Handle notification payload
+                val notification = remoteMessage.notification
+                val data = remoteMessage.data
 
-        if (notification != null) {
-            val title = notification.title ?: "DB3K Blog"
-            val body = notification.body ?: ""
-            val url = data["url"] ?: data["link"] ?: ""
-            val typeStr = data["type"] ?: "generic"
+                if (notification != null) {
+                    val title = notification.title ?: "DB3K Blog"
+                    val body = notification.body ?: ""
+                    val url = data["url"] ?: data["link"] ?: ""
+                    val typeStr = data["type"] ?: "generic"
 
-            // Parse notification type
-            val type = when (typeStr) {
-                "new_post" -> NotificationType.NEW_POST
-                "race_results" -> NotificationType.RACE_RESULTS
-                "event" -> NotificationType.EVENT
-                else -> NotificationType.GENERIC
+                    // Parse notification type
+                    val type = when (typeStr) {
+                        "new_post" -> NotificationType.NEW_POST
+                        "race_results" -> NotificationType.RACE_RESULTS
+                        "event" -> NotificationType.EVENT
+                        else -> NotificationType.GENERIC
+                    }
+
+                    // Check if this type is enabled
+                    val typeEnabled = when (type) {
+                        NotificationType.NEW_POST -> userPreferences.pushNewPosts.first() ?: true
+                        NotificationType.RACE_RESULTS -> userPreferences.pushRaceResults.first() ?: true
+                        NotificationType.EVENT -> userPreferences.pushEvents.first() ?: true
+                        else -> true
+                    }
+
+                    if (!typeEnabled) {
+                        Log.d(TAG, "Notification type $type disabled, ignoring")
+                        return@launch
+                    }
+
+                    // Save to local database
+                    val notif = Notification(
+                        title = title,
+                        body = body,
+                        url = url,
+                        type = type
+                    )
+                    notificationRepository.saveNotification(notif)
+
+                    // Get sound/vibration settings
+                    val soundEnabled = userPreferences.pushSound.first() ?: true
+                    val vibrateEnabled = userPreferences.pushVibration.first() ?: true
+
+                    // Show system notification
+                    showNotification(title, body, url, type, soundEnabled, vibrateEnabled)
+                }
+
+                // Handle data-only messages
+                if (data.isNotEmpty()) {
+                    Log.d(TAG, "Data message: $data")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error processing message", e)
             }
-
-            // Check if this type is enabled
-            val typeEnabled = when (type) {
-                NotificationType.NEW_POST -> userPreferences.pushNewPosts.firstOrNull() ?: true
-                NotificationType.RACE_RESULTS -> userPreferences.pushRaceResults.firstOrNull() ?: true
-                NotificationType.EVENT -> userPreferences.pushEvents.firstOrNull() ?: true
-                else -> true
-            }
-
-            if (!typeEnabled) {
-                Log.d(TAG, "Notification type $type disabled, ignoring")
-                return
-            }
-
-            // Save to local database
-            val notif = Notification(
-                title = title,
-                body = body,
-                url = url,
-                type = type
-            )
-            notificationRepository.saveNotification(notif)
-
-            // Show system notification
-            showNotification(title, body, url, type)
-        }
-
-        // Handle data-only messages
-        if (data.isNotEmpty()) {
-            Log.d(TAG, "Data message: $data")
         }
     }
 
@@ -126,7 +134,9 @@ class DB3KFirebaseMessagingService : FirebaseMessagingService() {
         title: String,
         body: String,
         url: String,
-        type: NotificationType
+        type: NotificationType,
+        soundEnabled: Boolean,
+        vibrateEnabled: Boolean
     ) {
         val channelId = getChannelId(type)
         createNotificationChannel(channelId, type)
@@ -156,7 +166,7 @@ class DB3KFirebaseMessagingService : FirebaseMessagingService() {
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
-            .setColor(ContextCompat.getColor(this, type.getAccentColorRes()))
+            .setColor(type.getAccentColorInt())
             .setColorized(true)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 
@@ -164,9 +174,6 @@ class DB3KFirebaseMessagingService : FirebaseMessagingService() {
         addNotificationActions(builder, url, type)
 
         // Sound and vibration
-        val soundEnabled = userPreferences.pushSound.firstOrNull() ?: true
-        val vibrateEnabled = userPreferences.pushVibration.firstOrNull() ?: true
-
         if (soundEnabled) {
             val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             builder.setSound(soundUri)
@@ -177,10 +184,8 @@ class DB3KFirebaseMessagingService : FirebaseMessagingService() {
         }
 
         // Large icon (Ducati shield)
-        builder.setLargeIcon(
-            androidx.core.graphics.drawable.IconCompat.createWithResource(this, R.drawable.ic_notification_ducati)
-                .toBitmap(this)
-        )
+        val largeIcon = BitmapFactory.decodeResource(resources, R.drawable.ic_notification_ducati)
+        builder.setLargeIcon(largeIcon)
 
         // Show notification
         val notificationId = (System.currentTimeMillis() % Integer.MAX_VALUE).toInt()
@@ -219,7 +224,7 @@ class DB3KFirebaseMessagingService : FirebaseMessagingService() {
                 val channel = NotificationChannel(channelId, name, importance).apply {
                     description = "Notifiche $name stile Ducati"
                     enableLights(true)
-                    lightColor = ContextCompat.getColor(this@DB3KFirebaseMessagingService, type.getAccentColorRes())
+                    lightColor = type.getAccentColorInt()
                     enableVibration(true)
                     vibrationPattern = longArrayOf(0, 200, 100, 200)
                     setShowBadge(true)
@@ -260,7 +265,7 @@ class DB3KFirebaseMessagingService : FirebaseMessagingService() {
 
         // Share action
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
+            setType("text/plain")
             putExtra(Intent.EXTRA_TEXT, "$url\n\nDa DB3K Blog")
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
@@ -280,13 +285,13 @@ class DB3KFirebaseMessagingService : FirebaseMessagingService() {
 }
 
 /**
- * Extension to get accent color resource for notification type
+ * Extension to get accent color int for notification type
  */
-private fun NotificationType.getAccentColorRes(): Int {
+private fun NotificationType.getAccentColorInt(): Int {
     return when (this) {
-        NotificationType.NEW_POST -> R.color.notification_channel_new_post
-        NotificationType.RACE_RESULTS -> R.color.notification_channel_race
-        NotificationType.EVENT -> R.color.notification_channel_event
-        else -> R.color.ducati_red
+        NotificationType.NEW_POST -> android.graphics.Color.parseColor("#E31837")
+        NotificationType.RACE_RESULTS -> android.graphics.Color.parseColor("#FF6B00")
+        NotificationType.EVENT -> android.graphics.Color.parseColor("#00E676")
+        else -> android.graphics.Color.parseColor("#E31837")
     }
 }

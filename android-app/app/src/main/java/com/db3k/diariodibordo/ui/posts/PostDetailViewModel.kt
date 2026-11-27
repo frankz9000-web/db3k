@@ -8,7 +8,10 @@ import com.db3k.diariodibordo.data.model.Post
 import com.db3k.diariodibordo.data.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 /**
@@ -34,17 +37,19 @@ class PostDetailViewModel @Inject constructor(
             _isLoading.value = true
             _error.value = null
 
-            postRepository.getPostBySlug(slug)
-                .collect { post ->
+            val job = postRepository.getPostBySlug(slug)
+                .onEach { post ->
                     _post.postValue(post)
                     _isLoading.postValue(false)
                 }
-                .invokeOnCompletion { cause ->
-                    if (cause != null) {
-                        _error.postValue("Errore caricamento post: ${cause.message}")
-                        _isLoading.postValue(false)
-                    }
+                .launchIn(viewModelScope)
+
+            job.invokeOnCompletion { cause ->
+                if (cause != null) {
+                    _error.postValue("Errore caricamento post: ${cause.message}")
+                    _isLoading.postValue(false)
                 }
+            }
         }
     }
 }

@@ -6,10 +6,16 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.db3k.diariodibordo.data.preferences.UserPreferences
 import com.db3k.diariodibordo.network.ApiService
+import com.db3k.diariodibordo.network.RegisterTokenRequest
+import com.db3k.diariodibordo.network.RegisterTokenResponse
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Inject
 
 /**
@@ -25,25 +31,22 @@ class FCMLifecycleObserver @Inject constructor(
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        // Check and register FCM token when app comes to foreground
         checkAndRegisterToken()
     }
 
-    /**
-     * Check if we have a valid FCM token and register it with backend
-     */
     private fun checkAndRegisterToken() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Get current token from preferences
-                val savedToken = userPreferences.fcmToken.firstOrNull()
+                val savedToken = userPreferences.fcmToken.first()
 
-                // Get fresh token from FCM
-                val currentToken = FirebaseMessaging.getInstance().token.await()
-
-                // Register if token changed or not registered yet
-                if (savedToken != currentToken) {
-                    registerTokenWithBackend(currentToken)
+                FirebaseMessaging.getInstance().token.addOnSuccessListener { currentToken ->
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if (savedToken != currentToken) {
+                            registerTokenWithBackend(currentToken)
+                        }
+                    }
+                }.addOnFailureListener { e ->
+                    Log.e(TAG, "Error getting FCM token", e)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error checking FCM token", e)
@@ -51,17 +54,13 @@ class FCMLifecycleObserver @Inject constructor(
         }
     }
 
-    /**
-     * Register FCM token with backend API
-     */
     private fun registerTokenWithBackend(token: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val request = RegisterTokenRequest(token = token)
-                val response = apiService.registerPushToken(request).await()
+                val response = apiService.registerPushToken(request)
 
                 if (response.isSuccessful && response.body()?.ok == true) {
-                    // Save token locally
                     userPreferences.setFcmToken(token)
                     Log.d(TAG, "FCM token registered successfully")
                 } else {

@@ -4,37 +4,40 @@ import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
+import androidx.work.ExistingPeriodicWorkPolicy
 import com.db3k.diariodibordo.data.preferences.UserPreferences
 import com.db3k.diariodibordo.network.ApiService
+import com.db3k.diariodibordo.network.RegisterTokenRequest
+import com.db3k.diariodibordo.DB3KApplication
 import com.google.firebase.messaging.FirebaseMessaging
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
+import kotlinx.coroutines.tasks.await
+import java.util.concurrent.TimeUnit
 
 /**
  * Periodic worker to refresh FCM token and keep it registered with backend
  */
-@AndroidEntryPoint
-class TokenRefreshWorker @Inject constructor(
+class TokenRefreshWorker(
     context: Context,
-    params: WorkerParameters,
-    private val userPreferences: UserPreferences,
-    private val apiService: ApiService
+    params: WorkerParameters
 ) : CoroutineWorker(context, params) {
 
     private val TAG = "TokenRefreshWorker"
 
+    private val userPreferences: UserPreferences
+        get() = DB3KApplication.getUserPreferences()
+
+    private val apiService: ApiService
+        get() = DB3KApplication.getApiService()
+
     override suspend fun doWork(): Result {
         return try {
-            // Get fresh token from FCM
             val token = FirebaseMessaging.getInstance().token.await()
-
-            // Register with backend
             val request = RegisterTokenRequest(token = token)
-            val response = apiService.registerPushToken(request).await()
+            val response = apiService.registerPushToken(request)
 
             if (response.isSuccessful && response.body()?.ok == true) {
-                // Update local token
                 userPreferences.setFcmToken(token)
                 Log.d(TAG, "Token refreshed successfully")
                 Result.success()

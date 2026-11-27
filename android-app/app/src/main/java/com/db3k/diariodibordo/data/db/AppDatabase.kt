@@ -72,7 +72,7 @@ class Converters {
 
     @androidx.room.TypeConverter
     fun fromStringList(value: String?): List<String> {
-        return value?.split(",").filter { it.isNotBlank() } ?: emptyList()
+        return value?.split(",")?.filter { it.isNotBlank() } ?: emptyList()
     }
 
     @androidx.room.TypeConverter

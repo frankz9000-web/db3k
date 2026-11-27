@@ -50,23 +50,23 @@ data class Notification(
         }
     }
 
-    /** Get icon for notification type */
-    fun getIconRes(): Int {
+    /** Get icon name for notification type (resource name without prefix) */
+    fun getIconName(): String {
         return when (type) {
-            NotificationType.NEW_POST -> R.drawable.ic_notification_new_post
-            NotificationType.RACE_RESULTS -> R.drawable.ic_notification_race
-            NotificationType.EVENT -> R.drawable.ic_notification_event
-            else -> R.drawable.ic_notification_generic
+            NotificationType.NEW_POST -> "ic_notification_new_post"
+            NotificationType.RACE_RESULTS -> "ic_notification_race"
+            NotificationType.EVENT -> "ic_notification_event"
+            else -> "ic_notification_generic"
         }
     }
 
-    /** Get accent color for notification type */
-    fun getAccentColor(): Int {
+    /** Get accent color name for notification type (resource name without prefix) */
+    fun getAccentColorName(): String {
         return when (type) {
-            NotificationType.NEW_POST -> R.color.notification_channel_new_post
-            NotificationType.RACE_RESULTS -> R.color.notification_channel_race
-            NotificationType.EVENT -> R.color.notification_channel_event
-            else -> R.color.ducati_red
+            NotificationType.NEW_POST -> "notification_channel_new_post"
+            NotificationType.RACE_RESULTS -> "notification_channel_race"
+            NotificationType.EVENT -> "notification_channel_event"
+            else -> "ducati_red"
         }
     }
 }

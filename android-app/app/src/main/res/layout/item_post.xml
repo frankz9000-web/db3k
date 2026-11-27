@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textWeight="600"
+                android:textStyle="bold"
                 android:textColor="@color/text_primary"
                 android:maxLines="2"
                 android:ellipsize="end" />
@@ -88,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="11sp"
                     android:textColor="@color/ducati_red"
-                    android:textWeight="500" />
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="1dp"

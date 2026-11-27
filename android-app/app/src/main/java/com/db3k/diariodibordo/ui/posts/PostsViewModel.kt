@@ -8,7 +8,7 @@ import com.db3k.diariodibordo.data.model.Post
 import com.db3k.diariodibordo.data.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -43,26 +43,23 @@ class PostsViewModel @Inject constructor(
             _isLoading.value = true
             _error.value = null
 
-            // Load all posts for categories
-            postRepository.getAllPosts()
-                .collect { allPosts ->
-                    // Extract unique categories
-                    val cats = allPosts
-                        .mapNotNull { it.category }
-                        .distinct()
-                        .sorted()
-                    _categories.postValue(cats)
+            try {
+                val allPosts = postRepository.getAllPosts().first()
 
-                    // Apply current filter
-                    applyFilters(allPosts)
-                    _isLoading.postValue(false)
-                }
-                .invokeOnCompletion { cause ->
-                    if (cause != null) {
-                        _error.postValue("Errore caricamento post: ${cause.message}")
-                        _isLoading.postValue(false)
-                    }
-                }
+                // Extract unique categories
+                val cats = allPosts
+                    .mapNotNull { it.category }
+                    .distinct()
+                    .sorted()
+                _categories.postValue(cats)
+
+                // Apply current filter
+                applyFilters(allPosts)
+                _isLoading.postValue(false)
+            } catch (e: Exception) {
+                _error.postValue("Errore caricamento post: ${e.message}")
+                _isLoading.postValue(false)
+            }
         }
     }
 
@@ -79,8 +76,8 @@ class PostsViewModel @Inject constructor(
             val query = currentQuery.lowercase()
             filtered = filtered.filter { post ->
                 post.title.lowercase().contains(query) ||
-                post.excerpt?.lowercase().contains(query) == true ||
-                post.content?.lowercase().contains(query) == true ||
+                post.excerpt?.let { it.lowercase().contains(query) } == true ||
+                post.content?.let { it.lowercase().contains(query) } == true ||
                 post.tags.any { it.lowercase().contains(query) }
             }
         }
@@ -92,9 +89,8 @@ class PostsViewModel @Inject constructor(
     fun filterByCategory(category: String?) {
         currentCategory = category
         viewModelScope.launch {
-            postRepository.getAllPosts().first().let { allPosts ->
-                applyFilters(allPosts)
-            }
+            val allPosts: List<Post> = postRepository.getAllPosts().first()
+            applyFilters(allPosts)
         }
     }
 
@@ -102,9 +98,8 @@ class PostsViewModel @Inject constructor(
     fun searchPosts(query: String) {
         currentQuery = query
         viewModelScope.launch {
-            postRepository.getAllPosts().first().let { allPosts ->
-                applyFilters(allPosts)
-            }
+            val allPosts: List<Post> = postRepository.getAllPosts().first()
+            applyFilters(allPosts)
         }
     }
 

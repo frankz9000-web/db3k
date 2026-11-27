@@ -8,7 +8,10 @@ import com.db3k.diariodibordo.data.model.Post
 import com.db3k.diariodibordo.data.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 /**
@@ -40,8 +43,8 @@ class EventsViewModel @Inject constructor(
             _isLoading.value = true
             _error.value = null
 
-            postRepository.getAllPosts()
-                .collect { allPosts ->
+            val job = postRepository.getAllPosts()
+                .onEach { allPosts ->
                     val now = System.currentTimeMillis()
                     val upcoming = allPosts.filter { it.isEvent() }
                         .filter { post ->
@@ -49,7 +52,7 @@ class EventsViewModel @Inject constructor(
                                 val date = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).parse(post.date)
                                 date?.time ?: 0 > now
                             } catch (e: Exception) {
-                                true // Include if date parsing fails
+                                true
                             }
                         }
                         .sortedBy { it.date }
@@ -69,12 +72,14 @@ class EventsViewModel @Inject constructor(
                     _pastEvents.postValue(past)
                     _isLoading.postValue(false)
                 }
-                .invokeOnCompletion { cause ->
-                    if (cause != null) {
-                        _error.postValue("Errore caricamento eventi: ${cause.message}")
-                        _isLoading.postValue(false)
-                    }
+                .launchIn(viewModelScope)
+
+            job.invokeOnCompletion { cause ->
+                if (cause != null) {
+                    _error.postValue("Errore caricamento eventi: ${cause.message}")
+                    _isLoading.postValue(false)
                 }
+            }
         }
     }
 

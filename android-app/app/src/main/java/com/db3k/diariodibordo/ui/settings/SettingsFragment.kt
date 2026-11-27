@@ -7,10 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.db3k.diariodibordo.BuildConfig
 import com.db3k.diariodibordo.R
 import com.db3k.diariodibordo.databinding.FragmentSettingsBinding
-import com.db3k.diariodibordo.data.preferences.UserPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -46,7 +44,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private fun setupPreferences() {
         // Version
-        binding.versionText.text = getString(R.string.settings_version, BuildConfig.VERSION_NAME)
+        binding.versionText.text = getString(R.string.settings_version, "1.0.0")
 
         // Push notifications master switch
         binding.switchPushEnabled.setOnCheckedChangeListener { _, isChecked ->
@@ -130,7 +128,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private fun sendFeedback() {
         val intent = android.content.Intent(android.content.Intent.ACTION_SENDTO).apply {
             data = android.net.Uri.parse("mailto:feedback@db3k.it")
-            putExtra(android.content.Intent.EXTRA_SUBJECT, "Feedback DB3K Blog App v${BuildConfig.VERSION_NAME}")
+            putExtra(android.content.Intent.EXTRA_SUBJECT, "Feedback DB3K Blog App v1.0.0")
             putExtra(android.content.Intent.EXTRA_TEXT, "Scrivi qui il tuo feedback...")
         }
         try {

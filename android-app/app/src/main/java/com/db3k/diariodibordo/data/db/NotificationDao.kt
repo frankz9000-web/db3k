@@ -30,7 +30,7 @@ interface NotificationDao {
     @Query("SELECT * FROM notifications WHERE isRead = 0 ORDER BY timestamp DESC")
     fun getUnreadNotifications(): Flow<List<Notification>>
 
-    @Query("SELECT * notifications WHERE id = :id")
+    @Query("SELECT * FROM notifications WHERE id = :id")
     suspend fun getNotificationById(id: Long): Notification?
 
     @Update

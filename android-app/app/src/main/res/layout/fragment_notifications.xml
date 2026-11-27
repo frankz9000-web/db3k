@@ -118,7 +118,7 @@
             android:background="@drawable/bg_badge_unread"
             android:textColor="@color/ducati_white"
             android:textSize="11sp"
-            android:textWeight="600"
+            android:textStyle="bold"
             android:gravity="center"
             android:visibility="gone" />
 
