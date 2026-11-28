@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Adaptive icon foreground: Ducati red shield with white "DB3K" block letters -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Ducati Red Shield -->
+    <!-- Shield -->
     <path
         android:fillColor="#E31837"
-        android:pathData="M54,8C30.5,8 10,26.5 10,50c0,26.5 37,52 44,58c7,-6 44,-31.5 44,-58C98,26.5 77.5,8 54,8z" />
-    <!-- Ducati White Logo DB3K -->
-    <group android:translateX="38" android:translateY="34">
-        <!-- D -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M0,0h12v36h-12zM12,0h8c11,0 16,5 16,18s-5,18-16,18h-8z" />
-        <!-- B -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M28,0h12v36h-12zM40,0h8c11,0 16,5 16,18s-5,18-16,18h-8v-12h6c4,0 7-3 7-7s-3-7-7-7h-6v-6h6c4,0 7-3 7-7s-3-7-7-7h-6z" />
-        <!-- 3 -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M58,0h14v5h-10v6h10v5h-14zM72,26v-6h-8v6zM64,36h18v5h-18z" />
-        <!-- K -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M84,0h12v36h-12zM96,0h-8l-12,18h4l8,18h-12zM84,18h12v-6h-12z" />
-    </group>
+        android:pathData="M54,6C31,6 12,24 12,47c0,26 36,50 42,55c6,-5 42,-29 42,-55C96,24 77,6 54,6z" />
+    <!-- Inner shield highlight -->
+    <path
+        android:fillColor="#C00000"
+        android:pathData="M54,14C36,14 20,29 20,48c0,22 31,43 34,46c3,-3 34,-24 34,-46C88,29 72,14 54,14z" />
+    <!-- Letter D: x 18-35, y 44-64 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M18,44 H25 A10,10 0 0 1 25,64 H18 Z" />
+    <!-- Letter B: x 36-51, y 44-64 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M36,44 H44 A5,5 0 0 1 44,54 H36 Z M36,54 H45 A5,5 0 0 1 45,64 H36 Z" />
+    <!-- Letter 3 (blocky digital): x 56-70, y 44-64 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M56,44 H70 V64 H56 V60 H66 V56 H56 V52 H66 V48 H56 Z" />
+    <!-- Letter K: x 74-92, y 44-64 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M74,44 H79 V52 L86,44 H92 L84,54 L92,64 H86 L79,56 V64 H74 Z" />
 </vector>

@@ -43,12 +43,20 @@ class PostRepository @Inject constructor(
                 return Result.failure(Exception("API Error: ${response.code()}"))
             }
 
-            val posts = response.body()?.posts ?: emptyList()
-            if (posts.isNotEmpty()) {
+            val rawPosts = response.body()?.posts ?: emptyList()
+            if (rawPosts.isNotEmpty()) {
+                // Ensure every post has a non-blank slug (Room primary key) and a URL
+                val posts = rawPosts.map { post ->
+                    val slug = post.slug.ifBlank { Post.slugify(post.title) }
+                    post.copy(
+                        slug = slug,
+                        url = post.url ?: "https://db3k-blog.pages.dev/posts/$slug/"
+                    )
+                }
                 postDao.insertPosts(posts)
             }
 
-            Result.success(posts.size)
+            Result.success(rawPosts.size)
         } catch (e: Exception) {
             Result.failure(e)
         }

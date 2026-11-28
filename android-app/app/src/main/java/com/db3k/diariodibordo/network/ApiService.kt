@@ -13,11 +13,11 @@ import retrofit2.http.Path
  */
 interface ApiService {
 
-    @GET("api/posts")
+    @GET("api/posts.json")
     suspend fun getPosts(): Response<PostsResponse>
 
-    @GET("api/posts/{slug}")
-    suspend fun getPost(@Path("slug") slug: String): Response<PostResponse>
+    @GET("api/posts.json")
+    suspend fun getPost(@Path("slug") slug: String): Response<PostsResponse>
 
     @POST("api/push/register")
     suspend fun registerPushToken(@Body body: RegisterTokenRequest): Response<RegisterTokenResponse>

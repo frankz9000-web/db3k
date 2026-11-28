@@ -5,43 +5,43 @@ import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 
 /**
- * Blog post model - matches the backend API structure
+ * Blog post model - matches the backend API structure (api/posts.json)
  */
 @Entity(tableName = "posts")
 data class Post(
     @PrimaryKey
     @Json(name = "slug")
-    val slug: String,
+    val slug: String = "",
 
     @Json(name = "title")
-    val title: String,
+    val title: String = "",
 
     @Json(name = "excerpt")
-    val excerpt: String?,
+    val excerpt: String? = null,
 
     @Json(name = "content")
-    val content: String?,
+    val content: String? = null,
 
-    @Json(name = "date")
-    val date: String,
+    @Json(name = "pubDate")
+    val date: String = "",
 
     @Json(name = "author")
-    val author: String?,
+    val author: String? = null,
 
     @Json(name = "category")
-    val category: String?,
+    val category: String? = null,
 
     @Json(name = "tags")
     val tags: List<String> = emptyList(),
 
     @Json(name = "coverImage")
-    val coverImage: String?,
+    val coverImage: String? = null,
 
     @Json(name = "images")
     val images: List<String> = emptyList(),
 
     @Json(name = "url")
-    val url: String?,
+    val url: String? = null,
 
     // Local fields
     @Json(name = "isRead")
@@ -62,6 +62,16 @@ data class Post(
             coverImage = null,
             url = null
         )
+
+        /** Generate a slug from a title (fallback when API doesn't provide one) */
+        fun slugify(title: String): String {
+            return title.lowercase()
+                .replace(Regex("[^a-z0-9\\s-]"), "")
+                .trim()
+                .replace(Regex("\\s+"), "-")
+                .take(80)
+                .ifBlank { "post-${System.currentTimeMillis()}" }
+        }
     }
 
     /** Format date for display */
